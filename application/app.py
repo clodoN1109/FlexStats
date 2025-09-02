@@ -17,10 +17,7 @@ class App:
         self.repository : IRepository      = repository
         self.observables: List[Observable] = self.repository.load_observables()
         self.events     : List[Event]      = self.repository.load_events()
-        self.model      : Model            = self._compute_model()
-
-    def _compute_model(self) -> Model:
-        return Model(self.events)
+        self.model      : Model            = Model(self.events)
 
     def new_observable(self, name: str, source: str):
         obs = Observable(name=name, source=source)
@@ -57,7 +54,6 @@ class App:
         domain = RangeDomain(domain_min, domain_max)
         variable = obj.variables.get(variable_name)
         stats = StatsAnalyzer.compute(variable, domain)
-        print(stats)
         return stats
 
     def compute_stats_for_values(self, object_name: str, variable_name: str) -> Stats:
@@ -66,7 +62,6 @@ class App:
         known_values = variable.data.all_values()
         domain = EnumerationDomain(known_values)
         stats = StatsAnalyzer.compute(variable, domain)
-        print(stats)
         return stats
 
     def get_variable_data(self, object_name: str, variable_name: str) -> VariableData:

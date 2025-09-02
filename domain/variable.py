@@ -51,10 +51,3 @@ class VariableData:
 class Variable:
     name: str
     data: VariableData = field(default_factory=VariableData)
-
-
-@dataclass
-class Variable:
-    name: str
-    data: VariableData = field(default_factory=VariableData)
-
