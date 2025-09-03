@@ -86,7 +86,7 @@ class App:
             title = f"Time Series for {variable_name}"
             subtitle = f"{object_name}"
             x_label = "Time"
-            y_label = "Value"
+            y_label = variable.name
 
 
         elif plot_type == "distribution":
@@ -103,8 +103,8 @@ class App:
                 x = [k for k, _ in items]
                 y = [v for _, v in items]
             title = f"Distribution of {variable_name}"
-            subtitle = f"Object: {object_name}"
-            x_label = "Value"
+            subtitle = f"{object_name}"
+            x_label = variable.name
             y_label = "Frequency"
 
         else:

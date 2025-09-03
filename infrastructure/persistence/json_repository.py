@@ -4,15 +4,15 @@ from typing import List
 from application.ports.i_repository import IRepository
 from domain.event import Event
 from domain.observable import Observable
-from infrastructure.environment.environment import get_observables_file_path, get_events_file_path
+from infrastructure.environment.environment import Env
 
 
 class JsonRepository(IRepository):
     """Concrete repository using a JSON file."""
 
     def __init__(self):
-        self.observables_file_path: Path = get_observables_file_path()
-        self.events_file_path: Path = get_events_file_path()
+        self.observables_file_path: Path = Env.get_observables_file_path()
+        self.events_file_path: Path = Env.get_events_file_path()
         if not self.observables_file_path.exists():
             # initialize empty file
             self.save_observables([])
