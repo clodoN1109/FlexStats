@@ -14,7 +14,7 @@ class TkinterGUI(tk.Tk):
         self.app = app
         self.model = app.model
         self.gui_path = Env.get_script_path()
-        self.style = GUIStyle("light")
+        self.style = GUIStyle("dark")
 
         renderer = GUIRenderer(self)
         renderer.config_window_navbar()
@@ -24,6 +24,7 @@ class TkinterGUI(tk.Tk):
         renderer.panes()
         renderer.refresh_objects()
         renderer.ensure_overrideredirect()
+        renderer.apply_style()
 
 
 

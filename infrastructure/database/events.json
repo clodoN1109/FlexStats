@@ -256,5 +256,61 @@
                 ]
             }
         ]
+    },
+    {
+        "timestamp": "2025-09-04T19:02:16.715394+00:00",
+        "records": [
+            {
+                "observable": "observable_A",
+                "state": []
+            },
+            {
+                "observable": "observable_B",
+                "state": []
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-04T19:03:53.110902+00:00",
+        "records": [
+            {
+                "observable": "observable_A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 20
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 29
+                    }
+                ]
+            },
+            {
+                "observable": "observable_B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            }
+        ]
     }
 ]

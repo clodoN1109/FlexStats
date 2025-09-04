@@ -1,158 +1,153 @@
+import datetime
 import tkinter as tk
 from tkinter import ttk
 import tkinter.font as tkFont
 from typing import List
+
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from domain import Object, Variable
 from domain.plot import PlotData
 import matplotlib.dates as mdates
-
 from interface.GUI.gui_styles import GUIStyle
 
 
 class GUIRenderer:
 
     def __init__(self, gui):
+        self.icon_label = None
         self.gui = gui
         self.style: GUIStyle = gui.style
-        self.section_items_padding_x = 10
+        self.section_items_padding_x = 8
         self.section_items_padding_y = 0
         self.button_padding = 10
-        self.apply_style()
         self._is_maximized = False
-
+        self.gui.subtitle_text = None
 
     def config_window_navbar(self):
         self.gui.overrideredirect(True)
         try:
-            self.gui.iconphoto(False, tk.PhotoImage(file=f"{self.gui.gui_path}/assets/icon.png"))
+            self.gui.iconphoto(False, tk.PhotoImage(file=f"{self.gui.gui_path}/assets/icons/icon.png"))
         except Exception:
             pass
 
     def apply_style(self):
         """
-        Apply a Style object to ttk widgets and other UI elements.
-        Safe to call multiple times; it updates existing elements if present.
+        Apply the current GUIStyle (self.style) to ttk styles and other UI elements.
+        Updates all widgets recursively, including those created by helpers.
         """
-        # Create/use ttk style object tied to root
-        self.gui.style = ttk.Style(self.gui)
-        self.gui.style.theme_use("clam")  # safe base theme that reacts to configure()
+        gui_style = ttk.Style(self.gui)
+        try:
+            gui_style.theme_use("clam")
+        except Exception:
+            pass
 
-        # --- Basic widget styles (frames, labels, buttons, combobox entry) ---
-        self.gui.style.configure(f"{self.style.prefix}.TFrame", background=self.style.primary_bg)
-        self.gui.style.configure(
-            f"{self.style.prefix}.TLabel",
-            background=self.style.primary_bg,
-            foreground=self.style.primary_fg,
-        )
-        # Base style
-        self.gui.style.configure(
-            f"{self.style.prefix}.TButton",
-            background=self.style.accent_bg,
-            foreground=self.style.primary_fg,
-            borderwidth=1,
-            relief="flat",
-            focusthickness=0,
-            focuscolor=self.style.accent_bg,
-        )
-        # State-specific overrides
-        self.gui.style.map(
-            f"{self.style.prefix}.TButton",
+        theme = self.style
+        prefix = theme.prefix
+
+        self.update_logo_image()
+
+        self.gui.attributes("-alpha", 0.9)  # 0.0 = fully transparent, 1.0 = opaque
+
+        # --- Core ttk styles ---
+        gui_style.configure(f"{prefix}.TFrame", background=theme.primary_bg)
+        gui_style.configure(f"{prefix}.TLabel",
+                            background=theme.primary_bg,
+                            foreground=theme.primary_fg)
+        gui_style.configure(f"{prefix}.Section.TLabel",
+                            background=theme.section_separator_bg,
+                            foreground=theme.section_separator_fg,
+                            anchor="center")
+        gui_style.configure(f"{prefix}.TButton",
+                            background=theme.accent_bg,
+                            foreground=theme.primary_fg,
+                            relief="flat",
+                            padding=2,
+                            borderwidth=0.5)
+        gui_style.map(
+            f"{prefix}.TButton",
             background=[
-                ("active", self.style.accent_bg),  # keep same background on hover
-                ("pressed", self.style.accent_bg),  # no inversion
+                ("active", theme.accent_hover),
+                ("pressed", theme.accent_bg)
             ],
             foreground=[
-                ("active", self.style.primary_fg),  # keep text color readable
-                ("pressed", self.style.primary_fg),
-            ],
-            bordercolor=[
-                ("active", self.style.button_border_color_accent),  # white border on hover
-                ("pressed", self.style.primary_fg),
+                ("active", theme.primary_fg),
+                ("pressed", theme.primary_fg)
             ],
             relief=[
                 ("active", "solid"),
                 ("pressed", "sunken"),
-                ("!active", "flat"),
-            ]
+                ("!active", "flat")
+            ],
         )
+        gui_style.configure(f"{prefix}.TCombobox",
+                            fieldbackground=theme.accent_bg)
+        gui_style.configure(f"{prefix}.TSeparator", background=theme.primary_bg)
 
-        # Combobox entry field (the visible entry area)
-        self.gui.style.configure(
-            f"{self.style.prefix}.TCombobox",
-            fieldbackground=self.style.accent_bg,
-            foreground=self.style.primary_fg,
-        )
+        # Title bar custom buttons
+        gui_style.configure("TitleBar.TButton",
+                            background=self.style.primary_bg,
+                            foreground=theme.primary_fg,
+                            relief="flat",
+                            padding=5)
 
-        # --- Combobox dropdown (listbox) colors ---
-        # Important: the combobox popdown is a Listbox in a Toplevel; we set
-        # option database entries to ensure the list uses readable colors.
-        # For dark mode we make the dropdown list light (inverted) with dark text.
-        if self.style.prefix == "Dark":
-            list_bg = "#f5f5f5"  # popup background
-            list_fg = "#1e1e1e"  # popup text
-            sel_bg = self.style.semantic_info
-            sel_fg = self.style.primary_bg
-            field_bg = "#e2e2e2"  # entry background
-            field_fg = "#323232"  # entry foreground
-        elif self.style.prefix == "Light":
-            list_bg = "#f2c55c"
-            list_fg = self.style.primary_fg
-            sel_bg = self.style.semantic_info
-            sel_fg = self.style.primary_bg
-            field_bg = "#f2c55c"
-            field_fg = "#323232"
-        else:
-            list_bg = "#f2c55c"
-            list_fg = self.style.primary_fg
-            sel_bg = self.style.semantic_info
-            sel_fg = self.style.primary_bg
-            field_bg = "#f2c55c"
-            field_fg = "#323232"
+        # --- Recursive restyle function ---
+        def restyle_widget(widget):
+            try:
+                if isinstance(widget, ttk.Frame):
+                    widget.configure(style=f"{prefix}.TFrame")
+                elif isinstance(widget, ttk.Label):
+                    current = widget.cget("style")
+                    if "Section" in current:
+                        widget.configure(style=f"{prefix}.Section.TLabel")
+                    elif "Title" in current:
+                        widget.configure(style=f"{prefix}.TLabel")  # or custom title style
+                    else:
+                        widget.configure(style=f"{prefix}.TLabel")
+                elif isinstance(widget, ttk.Button):
+                    if "TitleBar" in widget.cget("style"):
+                        widget.configure(style="TitleBar.TButton")
+                    else:
+                        widget.configure(style=f"{prefix}.TButton")
+                elif isinstance(widget, ttk.Combobox):
+                    widget.configure(style=f"{prefix}.TCombobox")
+                elif isinstance(widget, ttk.Separator):
+                    widget.configure(style=f"{prefix}.TSeparator")
+                elif isinstance(widget, tk.Text):
+                    widget.configure(bg=theme.text_bg,
+                                     fg=theme.text_fg,
+                                     insertbackground=theme.text_fg)
+                elif isinstance(widget, tk.Frame):
+                    widget.configure(bg=theme.primary_bg)
+            except Exception:
+                pass
 
-        # Configure the dropdown popup (listbox)
-        self.gui.option_add("*TCombobox*Listbox.background", list_bg)
-        self.gui.option_add("*TCombobox*Listbox.foreground", list_fg)
-        self.gui.option_add("*TCombobox*Listbox.selectBackground", sel_bg)
-        self.gui.option_add("*TCombobox*Listbox.selectForeground", sel_fg)
+            for child in widget.winfo_children():
+                restyle_widget(child)
+        restyle_widget(self.gui)
 
-        # Configure the entry field (what shows when dropdown is closed)
-        self.gui.style.configure(
-            f"{self.style.prefix}.TCombobox",
-            fieldbackground=field_bg,
-            foreground=field_fg,
-            background=field_bg,
-        )
+        # Exclusive styles
+        self.gui.window_footer.configure(background=self.style.separator_bg)
+        self.gui.container.configure(bg=self.style.separator_bg)
+        self.gui.stats_separator.configure(bg=self.style.separator_bg)
+        self.gui.title_separator.configure(bg=self.style.separator_bg)
 
-        # --- Separator style: keep invisible/subtle (do not change with heavy visuals) ---
-        # We intentionally do NOT draw bold separators; keep them subtle or match bg.
-        # The widget code uses frame separators that already match primary_bg.
-        self.gui.style.configure(f"{self.style.prefix}.TSeparator", background=self.style.primary_bg)
-
-        # --- Text areas (non-ttk widgets: Text) ---
-        # If stats_text exists already, update its colors
-        if hasattr(self.gui, "stats_text") and isinstance(self.gui.stats_text, tk.Text):
-            self.gui.stats_text.configure(
-                bg=self.style.text_bg,
-                fg=self.style.text_fg,
-                insertbackground=self.style.text_fg,
-            )
-
-        # --- Plot styling ---
-        # If the plot (matplotlib) exists already on the GUI, update colors
+        # --- matplotlib re-style ---
         if hasattr(self.gui, "ax") and hasattr(self.gui, "fig"):
-            self.gui.fig.set_facecolor(self.style.primary_bg)
-            self.gui.ax.set_facecolor(self.style.text_bg)
-            # ticks and labels
-            self.gui.ax.tick_params(colors=self.style.primary_fg)
-            self.gui.ax.xaxis.label.set_color(self.style.primary_fg)
-            self.gui.ax.yaxis.label.set_color(self.style.primary_fg)
-            self.gui.ax.title.set_color(self.style.primary_fg)
-            # grid
-            self.gui.ax.grid(color=self.style.grid_color, linestyle="--", linewidth=0.5)
+            self.gui.fig.set_facecolor(theme.primary_bg)
+            self.gui.ax.set_facecolor(theme.text_bg)
+            self.gui.ax.tick_params(colors=theme.primary_fg)
+            self.gui.ax.xaxis.label.set_color(theme.primary_fg)
+            self.gui.ax.yaxis.label.set_color(theme.primary_fg)
+            self.gui.ax.title.set_color(theme.primary_fg)
+            # Spines (borders around the plot)
+            for spine in self.gui.ax.spines.values():
+                spine.set_edgecolor(theme.primary_fg)   # border color
+                spine.set_linewidth(0.8)
 
-            # if canvas exists, schedule redraw
+            if self.gui.subtitle_text:
+                self.gui.subtitle_text.set_color(theme.primary_fg)
+            self.gui.ax.grid(color=theme.grid_color, linestyle="--", linewidth=0.5)
             if hasattr(self.gui, "canvas"):
                 try:
                     self.gui.canvas.draw_idle()
@@ -162,33 +157,26 @@ class GUIRenderer:
     def window(self, title: str, resolution: str = "1000x600"):
         self.gui.title(title)
         self.gui.geometry(resolution)
-        # set the background of the root window
-        self.gui.configure(bg=self.style.primary_bg)
 
     def font(self, font_family, size):
         self.gui.default_font = tkFont.Font(family=font_family, size=size)
         self.gui.option_add("*Font", self.gui.default_font)
 
     def section_separator(self, section_title: str):
-        # Use the active theme label style (no hardcoded Light/other)
         ttk.Label(
             self.gui.left_frame,
-            text=f"{section_title}",
-            style=f"{self.style.prefix}.TLabel",
+            text=section_title,
             anchor="center",
-            justify="center",
-            background=self.style.accent_bg,
-        ).pack(fill="x", padx=0, pady=(10, 10))
+            style=f"{self.style.prefix}.Section.TLabel"
+        ).pack(fill="x", padx=0, pady=(0, 5))
 
-        # Intentionally do NOT add a visible ttk.Separator here — you asked separators stay invisible.
-
-    def section_item_separator(self):
-        # invisible spacer that matches the primary background
-        tk.Frame(self.gui.left_frame, height=10, background=self.style.primary_bg).pack(fill="x", pady=2)
+    def section_item_separator(self, height = 2):
+        spacer = tk.Frame(self.gui.left_frame, height=2, bg=self.style.primary_bg, borderwidth=0, highlightthickness=0)
+        spacer.pack(fill="x", pady=height)
 
     def left_pane(self, container):
         self.gui.left_frame = ttk.Frame(
-            container, width=250, relief=tk.RAISED, style=f"{self.style.prefix}.TFrame", padding=2, borderwidth=0
+            container, width=250, relief=tk.RAISED, style=f"{self.style.prefix}.TFrame", padding=(0, 0), borderwidth=0
         )
         container.add(self.gui.left_frame)
         # --- DATA Section ---
@@ -205,13 +193,15 @@ class GUIRenderer:
             "scripts",
             var_name="script_var",
             values=[],
-            button=("▷", self.plot_selected_data),  # small run button
+            button=("▷", self.plot_selected_data, 5),
         )
+        self.section_item_separator(5)
         # --- MODEL Section ---
         self.section_separator("MODEL")
         (self.gui.obj_cb, self.gui.obj_var) = self._add_dropdown(self.gui.left_frame, "objects", var_name="obj_var", values=[])
         self.section_item_separator()
         (self.gui.var_cb, self.gui.vars_var) = self._add_dropdown(self.gui.left_frame, "variables", var_name="var_var", values=[])
+        self.section_item_separator(5)
 
         # --- STATISTICS Section ---
         self.section_separator("STATISTICS")
@@ -219,9 +209,10 @@ class GUIRenderer:
             self.gui.left_frame,
             "plots",
             var_name="plot_var",
-            values=["time_series", "distribution"],
-            button=("▷", self.plot_selected_data),  # small plot button
+            values=["time series", "distribution"],
+            button=("▷", self.plot_selected_data, 5),  # small plot button
         )
+        self.section_item_separator(5)
 
         # --- FORECASTING Section ---
         self.section_separator("FORECASTING")
@@ -230,10 +221,19 @@ class GUIRenderer:
             "extrapolations",
             var_name="forecast_var",
             values=[],
-            button=("▷", self.plot_selected_data),  # small forecast plot button
+            button=("▷", self.plot_selected_data, 5),  # small forecast plot button
         )
+        self.section_item_separator(5)
 
     # --- Helper Methods ---
+    def _add_button(self, frame, text, cmd, width):
+        ttk.Button(
+            frame,
+            text=text,
+            command=cmd,
+            width=width,
+            style=f"{self.style.prefix}.TButton",
+        ).pack(side="left", padx=(2, 5), pady=(2, 2))
 
     def _add_button_row(self, parent, buttons):
         """Add a horizontal row of buttons."""
@@ -245,12 +245,12 @@ class GUIRenderer:
                 text=text,
                 command=cmd,
                 style=f"{self.style.prefix}.TButton",
-            ).pack(side="left", padx=(0, 5))
+            ).pack(side="left", padx=(self.section_items_padding_x - 2, 0))
 
     def _add_dropdown(self, parent, label, var_name, values, button=None):
         """Add a labeled dropdown, with optional small square button on the right."""
         ttk.Label(parent, text=label, style=f"{self.style.prefix}.TLabel").pack(
-            anchor="w", padx=self.section_items_padding_x, pady=self.section_items_padding_y
+            anchor="w", padx=self.section_items_padding_x * 2, pady=self.section_items_padding_y
         )
 
         frame = ttk.Frame(parent, style=f"{self.style.prefix}.TFrame")
@@ -266,60 +266,64 @@ class GUIRenderer:
             style=f"{self.style.prefix}.TCombobox",
             values=values,
         )
-        cb.pack(side="left", fill="x", expand=True)
+        cb.pack(side="left", fill="x", expand=False, padx=(self.section_items_padding_x, self.section_items_padding_x/2))
 
         if button:
-            text, cmd = button
-            ttk.Button(
-                frame,
-                text=text,
-                width=3,  # small square button
-                padding=3,
-                command=cmd,
-                style=f"{self.style.prefix}.TButton",
-            ).pack(side="right", padx=(5, 0))
-
+            text, cmd, width= button
+            self._add_button(frame, text, cmd, width)
         return cb, var
 
     def right_pane(self, container):
         self.gui.right_frame = ttk.Frame(container, style=f"{self.style.prefix}.TFrame", borderwidth=0)
         container.add(self.gui.right_frame)
 
+        # --- Inner vertical layout ---
+        right_inner = ttk.Frame(self.gui.right_frame, style=f"{self.style.prefix}.TFrame")
+        right_inner.pack(fill="both", expand=True)
+
         # Plot area
-        self.gui.fig = Figure(
-            figsize=(5, 4), dpi=100, facecolor=self.style.accent_bg, edgecolor=self.style.text_fg
-        )
+        self.gui.fig = Figure(figsize=(5, 4), dpi=100)
         self.gui.ax = self.gui.fig.add_subplot(111)
 
-        # Apply plot colors
-        self.gui.ax.set_facecolor(self.style.text_bg)
-        self.gui.ax.tick_params(colors=self.style.primary_fg)
-        self.gui.ax.xaxis.label.set_color(self.style.primary_fg)
-        self.gui.ax.yaxis.label.set_color(self.style.primary_fg)
-        self.gui.ax.title.set_color(self.style.primary_fg)
-        self.gui.ax.grid(color=self.style.grid_color, linestyle="--", linewidth=0.5)
+        self.gui.canvas = FigureCanvasTkAgg(self.gui.fig, master=right_inner)
+        self.gui.canvas.get_tk_widget().pack(fill="both", expand=True)
 
-        self.gui.canvas = FigureCanvasTkAgg(self.gui.fig, master=self.gui.right_frame)
-        self.gui.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        # Stats area
+        stats_container = ttk.Frame(right_inner, style=f"{self.style.prefix}.TFrame")
+        stats_container.pack(fill="x", side="bottom")
 
-        # Stats area (read-only)
+        self.gui.stats_separator = tk.Frame(
+            stats_container,
+            height=5,  # thickness of the line
+            bg=self.style.separator_bg,  # your desired color
+            bd=0
+        )
+        self.gui.stats_separator.pack(fill="x", pady=(0, 2))
+
         self.gui.stats_text = tk.Text(
-            self.gui.right_frame,
+            stats_container,
             height=2,
             bg=self.style.primary_bg,
             fg=self.style.text_fg,
-            insertbackground=self.style.primary_bg,
-            borderwidth= 0.5
+            insertbackground=self.style.text_fg,
+            borderwidth=0,
+            relief="flat",
         )
         self.gui.stats_text.pack(fill="x", padx=0, pady=0)
         self.gui.stats_text.configure(state="disabled")
+        # Footer at bottom
+        self.gui.window_footer = tk.Frame(
+            self.gui,
+            height=10,
+            borderwidth=0,
+        )
+        self.gui.window_footer.pack(fill="x", side="bottom")
 
     def panes(self):
-        container = tk.PanedWindow(orient="horizontal", sashwidth=5, bg="#dcdad5")
-        container.pack(fill="both", expand=True)
-        self.left_pane(container)
-        self.right_pane(container)
-
+        self.gui.container = tk.PanedWindow(orient="horizontal", sashwidth=5, bg=self.style.separator_bg, borderwidth=0)
+        self.gui.container.pack(fill="both", expand=True)
+        self.left_pane(self.gui.container)
+        self.right_pane(self.gui.container)
 
     def refresh_objects(self):
         objects: List[Object] = self.gui.app.list_objects()
@@ -350,20 +354,40 @@ class GUIRenderer:
         plot_data: PlotData = self.gui.app.get_plot_data(obj_name, var_name, plot_type)
         # Clear previous plot
         self.gui.ax.clear()
+        self.gui.ax.grid(color=self.style.grid_color, linestyle="--", linewidth=0.5)
 
         # Plot x vs y
-        if plot_data.plot_type == "time_series":
+        if plot_data.plot_type == "time series":
             self.gui.ax.plot(plot_data.x, plot_data.y, marker="o")
 
-            # Format x-axis as MM/DD/YYYY and show hours:minutes
-            self.gui.ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d/%Y\n%H:%M'))
-            self.gui.fig.autofmt_xdate()  # rotates and aligns dates nicely
+            # Format x-axis as MM/DD/YYYY and show hours:minutes, but in local time
+            local_tz = datetime.datetime.now().astimezone().tzinfo
+            # Local timezone-aware formatter
+            formatter = mdates.DateFormatter('%m/%d/%Y\n%H:%M', tz=local_tz)
+            self.gui.ax.xaxis.set_major_formatter(formatter)
+
+            # Force labels to stay horizontal
+            for label in self.gui.ax.get_xticklabels():
+                label.set_rotation(0)
+                label.set_ha("center")  # center them under the tick
+
+            # Reduce tick label font size
+            self.gui.ax.tick_params(axis="x", labelsize=8)
+            self.gui.ax.tick_params(axis="y", labelsize=8)
         else:
             self.gui.ax.bar(plot_data.x, plot_data.y)
 
         self.gui.ax.set_title(plot_data.title.upper(), color=self.style.primary_fg)
         if plot_data.subtitle:
-            self.gui.ax.set_title(plot_data.subtitle, fontsize=10, loc="right", color=self.style.primary_fg)
+            subtitle_obj = self.gui.ax.set_title(
+                plot_data.subtitle,
+                fontsize=10,
+                loc="right",
+                color=self.style.primary_fg,
+            )
+            # make sure it stays styled on theme refresh
+            self.gui.subtitle_text = subtitle_obj
+
         self.gui.ax.set_xlabel(plot_data.x_label.upper(), color=self.style.primary_fg)
         self.gui.ax.set_ylabel(plot_data.y_label.upper(), color=self.style.primary_fg)
 
@@ -433,23 +457,30 @@ class GUIRenderer:
             self.gui.stats_text.configure(state="disabled")
         display_stats_table(plot_data.stats)
 
+    def set_logo_image(self, frame, icon_path):
+        try:
+            self.gui.icon_image = tk.PhotoImage(file=icon_path)
+            self.icon_label = ttk.Label(frame, image=self.gui.icon_image)
+            self.icon_label.pack(side="left", padx=(5, 2))
+        except Exception as e:
+            print(f"Failed to load icon: {e}")
+
+    def update_logo_image(self):
+        icon_path = f"{self.gui.gui_path}/assets/icons/logo_{self.style.prefix}.png"
+        self.gui.icon_image = tk.PhotoImage(file=icon_path)
+        self.icon_label.configure(image=self.gui.icon_image)
+
     def build_title_bar(self):
         # Title bar frame
         title_bar = ttk.Frame(self.gui)
         title_bar.pack(fill="x")
 
-        # Icon (if provided)
-        icon_path = f"{self.gui.gui_path}/assets/logo_small.png"
-        try:
-            self.gui.icon_image = tk.PhotoImage(file=icon_path)
-            icon_label = ttk.Label(title_bar, image=self.gui.icon_image)
-            icon_label.pack(side="left", padx=(5, 2))
-        except Exception as e:
-            print(f"Failed to load icon: {e}")
+        icon_path = f"{self.gui.gui_path}/assets/icons/logo_{self.style.prefix}.png"
+        self.set_logo_image(title_bar, icon_path)
 
-        # Title text (align left)
+        # Title text (align left)s
         self.gui.title_label = ttk.Label(
-            title_bar, text="——  See Your Software Grow Like Never Before", anchor="w"
+            title_bar, text="——  See your software developing like never before", anchor="w", font=("Courier", 10, "italic")
         )
         self.gui.title_label.pack(side="left", padx=5)
 
@@ -460,18 +491,18 @@ class GUIRenderer:
         style = ttk.Style()
         style.configure("TitleBar.TButton", relief="flat", padding=5)
 
-        ttk.Button(
-            btn_frame, text="🗕", style="TitleBar.TButton",
-            command=self._minimize
-        ).pack(side="left")
-        ttk.Button(
-            btn_frame, text="🗖", style="TitleBar.TButton",
-            command=self._toggle_maximize
-        ).pack(side="left")
-        ttk.Button(
-            btn_frame, text="✕", style="TitleBar.TButton",
-            command=self.gui.destroy
-        ).pack(side="left")
+        self._add_button(btn_frame, "☽/☀", self.toggle_dark_mode, 10)
+        self._add_button(btn_frame, "🗕", self._minimize, 10)
+        self._add_button(btn_frame, "🗖", self._toggle_maximize, 10)
+        self._add_button(btn_frame, "✕", self.gui.destroy, 10)
+
+        # Title separator
+        self.gui.title_separator = tk.Frame(
+            self.gui,
+            height=5,
+            borderwidth=0,
+        )
+        self.gui.title_separator.pack(fill="x", side="top")
 
         # Enable dragging by clicking the title area
         def start_move(event):
@@ -489,8 +520,9 @@ class GUIRenderer:
         self.gui.title_label.bind("<Button-1>", start_move)
         self.gui.title_label.bind("<B1-Motion>", on_move)
         if icon_path:
-            icon_label.bind("<Button-1>", start_move)
-            icon_label.bind("<B1-Motion>", on_move)
+            self.icon_label.bind("<Button-1>", start_move)
+            self.icon_label.bind("<B1-Motion>", on_move)
+
 
     def _minimize(self):
         self.gui.update_idletasks()
@@ -519,3 +551,10 @@ class GUIRenderer:
 
         # Schedule the next check
         self.gui.after(interval_ms, self.ensure_overrideredirect, interval_ms)
+
+    def toggle_dark_mode(self):
+        if self.style.prefix == "Dark":
+            self.style = GUIStyle("light")
+        else:
+            self.style = GUIStyle("dark")
+        self.apply_style()

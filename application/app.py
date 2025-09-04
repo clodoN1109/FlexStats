@@ -93,7 +93,7 @@ class App:
         else:
             stats = self.compute_stats_for_values(object_name, variable_name)
 
-        if plot_type == "time_series":
+        if plot_type == "time series":
             # X is timestamps, Y is values
             x = list(variable_data.keys())
             y = list(variable_data.values())

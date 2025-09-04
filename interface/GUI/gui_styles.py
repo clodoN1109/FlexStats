@@ -5,12 +5,15 @@ class GUIStyle:
             self.primary_fg = "#f0f0f0"  # main text, near-white
             self.accent_bg = "#333333"  # buttons, inputs (entry field)
             self.accent_hover = "#444444"  # button hover
-            self.separator_bg = "#2a2a2a"  # subtle dividers (kept subtle/invisible)
+            self.separator_bg = "#333333"  # subtle dividers (kept subtle/invisible)
             self.text_bg = "#252526"  # sub-panes / stats background
             self.text_fg = "#f0f0f0"  # text in sub-panes
             self.grid_color = "#3a3a3a"  # chart grid, softer than fg
             self.semantic_info = "#569cd6"  # highlights (blue, like VS Code)
-            self.button_border_color_accent = "#e2e2e2"
+            self.button_border_color_accent = "#569cd6"
+            self.section_separator_fg = "#f0f0f0"
+            self.section_separator_bg = "#434343"
+            self.footer_bg = "#333333"
             self.prefix = "Dark"
 
         elif mode == "light":
@@ -24,6 +27,9 @@ class GUIStyle:
             self.grid_color = "#d0d0d0"  # chart grid
             self.semantic_info = "#2e7d32"  # Pythonic green
             self.button_border_color_accent = "#ffd43b" # Pythonic yellow
+            self.section_separator_fg = "#252526"
+            self.section_separator_bg = "#f0f0f0"
+            self.footer_bg = "#f0f0f0"
             self.prefix = "Light"
         else:
             raise ValueError(f"Unknown style mode: {mode}")
