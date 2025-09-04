@@ -14,14 +14,16 @@ class TkinterGUI(tk.Tk):
         self.app = app
         self.model = app.model
         self.gui_path = Env.get_script_path()
-        self.style = GUIStyle("dark")
+        self.style = GUIStyle("light")
 
         renderer = GUIRenderer(self)
         renderer.config_window_navbar()
         renderer.font("courier", 10)
         renderer.window("flexstats", "1000x600")
+        renderer.build_title_bar()
         renderer.panes()
         renderer.refresh_objects()
+        renderer.ensure_overrideredirect()
 
 
 

@@ -10,7 +10,7 @@ ValueType = Union[int, float, str]
 
 @dataclass
 class Stats:
-    count: int
+    events: int
     mean: float = None
     median: float = None
     std: float = None
@@ -31,18 +31,23 @@ class StatsAnalyzer:
         ]
 
         if not values:
-            return Stats(count=0)
+            return Stats(events=0)
 
         # Numeric stats
         if isinstance(domain, RangeDomain):
             numeric_values = [v for v in values if isinstance(v, (int, float))]
+            freq: Dict[ValueType, int] = {}
+            for v in values:
+                freq[v] = freq.get(v, 0) + 1
+            mode = max(freq.items(), key=lambda x: x[1])[0] if freq else None
             return Stats(
-                count=len(numeric_values),
+                events=len(numeric_values),
                 mean=statistics.mean(numeric_values) if numeric_values else None,
                 median=statistics.median(numeric_values) if numeric_values else None,
                 std=statistics.stdev(numeric_values) if len(numeric_values) > 1 else 0.0,
                 min=min(numeric_values) if numeric_values else None,
                 max=max(numeric_values) if numeric_values else None,
+                mode=mode,
             )
 
         # Enumeration stats
@@ -52,10 +57,10 @@ class StatsAnalyzer:
                 freq[v] = freq.get(v, 0) + 1
             mode = max(freq.items(), key=lambda x: x[1])[0] if freq else None
             return Stats(
-                count=len(values),
+                events=len(values),
                 frequencies=freq,
                 mode=mode,
             )
 
         # Fallback for unknown domain types
-        return Stats(count=len(values))
+        return Stats(events=len(values))

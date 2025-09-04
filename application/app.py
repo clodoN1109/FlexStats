@@ -75,24 +75,47 @@ class App:
         variable = obj.variables[variable_name]
         variable_data = variable.data
 
+        # Extract values from the data
+        values = list(variable_data.values())
+
+        # Decide if values are numeric (all values must be numeric)
+        from numbers import Number
+        is_all_numeric = bool(values) and all(isinstance(v, Number) for v in values)
+
+        # Choose stats computation
+        if is_all_numeric:
+            # Use numeric min/max from the numeric values
+            numeric_vals = [v for v in values if isinstance(v, Number)]
+            stats = self.compute_stats_within_range(
+                object_name, variable_name,
+                min(numeric_vals), max(numeric_vals)
+            )
+        else:
+            stats = self.compute_stats_for_values(object_name, variable_name)
+
         if plot_type == "time_series":
             # X is timestamps, Y is values
             x = list(variable_data.keys())
             y = list(variable_data.values())
-            stats = self.compute_stats_within_range(
-                object_name, variable_name,
-                min(y), max(y)
-            )
             title = f"Time Series for {variable_name}"
             subtitle = f"{object_name}"
             x_label = "Time"
             y_label = variable.name
 
-
         elif plot_type == "distribution":
-            # Compute stats first (this fills frequencies correctly)
-            stats = self.compute_stats_for_values(object_name, variable_name)
-            freq = stats.frequencies or {}
+            # Prefer frequencies from stats; if absent, build them from the raw values
+            freq = getattr(stats, "frequencies", None) or {}
+
+            if not freq:
+                # Build frequencies safely (handle unhashable items by stringifying)
+                freq = {}
+                for v in values:
+                    try:
+                        freq[v] = freq.get(v, 0) + 1
+                    except TypeError:
+                        key = str(v)
+                        freq[key] = freq.get(key, 0) + 1
+
             # Build axes from the frequencies
             # Prefer a stable, readable order: try by key; if mixed types, fall back to frequency desc
             try:
@@ -102,6 +125,7 @@ class App:
                 items = sorted(freq.items(), key=lambda kv: (-kv[1], str(kv[0])))
                 x = [k for k, _ in items]
                 y = [v for _, v in items]
+
             title = f"Distribution of {variable_name}"
             subtitle = f"{object_name}"
             x_label = variable.name

@@ -8,25 +8,26 @@ from domain import Object, Variable
 from domain.plot import PlotData
 import matplotlib.dates as mdates
 
+from interface.GUI.gui_styles import GUIStyle
+
+
 class GUIRenderer:
 
     def __init__(self, gui):
         self.gui = gui
-        self.style = gui.style
+        self.style: GUIStyle = gui.style
         self.section_items_padding_x = 10
         self.section_items_padding_y = 0
         self.button_padding = 10
-
-        # Apply base style early so style names exist before widgets are created
-        # (apply_style is safe to call — it checks for widget existence)
         self.apply_style()
+        self._is_maximized = False
+
 
     def config_window_navbar(self):
-        # Keep using the gui_path from the GUI instance
+        self.gui.overrideredirect(True)
         try:
-            self.gui.iconphoto(False, tk.PhotoImage(file=f"{self.gui.gui_path}/icon.png"))
+            self.gui.iconphoto(False, tk.PhotoImage(file=f"{self.gui.gui_path}/assets/icon.png"))
         except Exception:
-            # If icon not found or fails, ignore (non-fatal)
             pass
 
     def apply_style(self):
@@ -45,17 +46,38 @@ class GUIRenderer:
             background=self.style.primary_bg,
             foreground=self.style.primary_fg,
         )
+        # Base style
         self.gui.style.configure(
             f"{self.style.prefix}.TButton",
             background=self.style.accent_bg,
             foreground=self.style.primary_fg,
+            borderwidth=1,
+            relief="flat",
+            focusthickness=0,
+            focuscolor=self.style.accent_bg,
         )
-        # hover/active for buttons
+        # State-specific overrides
         self.gui.style.map(
             f"{self.style.prefix}.TButton",
-            background=[("active", self.style.accent_hover)],
-            foreground=[("active", self.style.primary_fg)],
+            background=[
+                ("active", self.style.accent_bg),  # keep same background on hover
+                ("pressed", self.style.accent_bg),  # no inversion
+            ],
+            foreground=[
+                ("active", self.style.primary_fg),  # keep text color readable
+                ("pressed", self.style.primary_fg),
+            ],
+            bordercolor=[
+                ("active", self.style.button_border_color_accent),  # white border on hover
+                ("pressed", self.style.primary_fg),
+            ],
+            relief=[
+                ("active", "solid"),
+                ("pressed", "sunken"),
+                ("!active", "flat"),
+            ]
         )
+
         # Combobox entry field (the visible entry area)
         self.gui.style.configure(
             f"{self.style.prefix}.TCombobox",
@@ -166,76 +188,102 @@ class GUIRenderer:
 
     def left_pane(self, container):
         self.gui.left_frame = ttk.Frame(
-            container, width=250, relief=tk.RAISED, style=f"{self.style.prefix}.TFrame", padding=2
+            container, width=250, relief=tk.RAISED, style=f"{self.style.prefix}.TFrame", padding=2, borderwidth=0
         )
-        container.add(self.gui.left_frame, weight=1)
-
-        # --- Model Section ---
+        container.add(self.gui.left_frame)
+        # --- DATA Section ---
+        self.section_separator("DATA")
+        self._add_button_row(
+            self.gui.left_frame,
+            [
+                ("➕ observable", self.plot_selected_data),
+                ("➕ event", self.plot_selected_data),
+            ],
+        )
+        self._add_dropdown(
+            self.gui.left_frame,
+            "scripts",
+            var_name="script_var",
+            values=[],
+            button=("▷", self.plot_selected_data),  # small run button
+        )
+        # --- MODEL Section ---
         self.section_separator("MODEL")
-
-        ttk.Label(
-            self.gui.left_frame,
-            text="objects",
-            style=f"{self.style.prefix}.TLabel",
-        ).pack(anchor="w", padx=self.section_items_padding_x, pady=self.section_items_padding_y)
-
-        # IMPORTANT: create StringVar with explicit master to avoid tkinter context issues
-        self.gui.obj_var = tk.StringVar(master=self.gui)
-        self.gui.obj_cb = ttk.Combobox(
-            self.gui.left_frame,
-            textvariable=self.gui.obj_var,
-            state="readonly",
-            style=f"{self.style.prefix}.TCombobox",
-        )
-        self.gui.obj_cb.pack(fill="x", padx=self.section_items_padding_x, pady=self.section_items_padding_y)
+        (self.gui.obj_cb, self.gui.obj_var) = self._add_dropdown(self.gui.left_frame, "objects", var_name="obj_var", values=[])
         self.section_item_separator()
+        (self.gui.var_cb, self.gui.vars_var) = self._add_dropdown(self.gui.left_frame, "variables", var_name="var_var", values=[])
 
-        ttk.Label(
-            self.gui.left_frame,
-            text="variables",
-            style=f"{self.style.prefix}.TLabel",
-        ).pack(anchor="w", padx=self.section_items_padding_x, pady=self.section_items_padding_y)
-
-        self.gui.var_var = tk.StringVar(master=self.gui)
-        self.gui.var_cb = ttk.Combobox(
-            self.gui.left_frame,
-            textvariable=self.gui.var_var,
-            state="readonly",
-            style=f"{self.style.prefix}.TCombobox",
-        )
-        self.gui.var_cb.pack(fill="x", padx=self.section_items_padding_x, pady=self.section_items_padding_y)
-
-        # --- Statistics Section ---
+        # --- STATISTICS Section ---
         self.section_separator("STATISTICS")
-
-        ttk.Label(self.gui.left_frame, text="plots", style=f"{self.style.prefix}.TLabel").pack(
-            anchor="w", padx=self.section_items_padding_x, pady=2
+        self._add_dropdown(
+            self.gui.left_frame,
+            "plots",
+            var_name="plot_var",
+            values=["time_series", "distribution"],
+            button=("▷", self.plot_selected_data),  # small plot button
         )
 
-        self.gui.plot_var = tk.StringVar(master=self.gui, value="time_series")
-        self.gui.plot_cb = ttk.Combobox(
+        # --- FORECASTING Section ---
+        self.section_separator("FORECASTING")
+        self._add_dropdown(
             self.gui.left_frame,
-            textvariable=self.gui.plot_var,
+            "extrapolations",
+            var_name="forecast_var",
+            values=[],
+            button=("▷", self.plot_selected_data),  # small forecast plot button
+        )
+
+    # --- Helper Methods ---
+
+    def _add_button_row(self, parent, buttons):
+        """Add a horizontal row of buttons."""
+        frame = ttk.Frame(parent, style=f"{self.style.prefix}.TFrame")
+        frame.pack(fill="x", padx=self.section_items_padding_x, pady=(self.button_padding, self.button_padding))
+        for text, cmd in buttons:
+            ttk.Button(
+                frame,
+                text=text,
+                command=cmd,
+                style=f"{self.style.prefix}.TButton",
+            ).pack(side="left", padx=(0, 5))
+
+    def _add_dropdown(self, parent, label, var_name, values, button=None):
+        """Add a labeled dropdown, with optional small square button on the right."""
+        ttk.Label(parent, text=label, style=f"{self.style.prefix}.TLabel").pack(
+            anchor="w", padx=self.section_items_padding_x, pady=self.section_items_padding_y
+        )
+
+        frame = ttk.Frame(parent, style=f"{self.style.prefix}.TFrame")
+        frame.pack(fill="x", padx=self.section_items_padding_x, pady=self.section_items_padding_y)
+
+        var = tk.StringVar(master=self.gui)
+        setattr(self.gui, var_name, var)
+
+        cb = ttk.Combobox(
+            frame,
+            textvariable=var,
             state="readonly",
             style=f"{self.style.prefix}.TCombobox",
+            values=values,
         )
-        self.gui.plot_cb["values"] = ["time_series", "distribution"]
-        self.gui.plot_cb.pack(fill="x", padx=self.section_items_padding_x, pady=self.section_items_padding_y)
+        cb.pack(side="left", fill="x", expand=True)
 
-        # Button aligned to right
-        btn_frame = ttk.Frame(self.gui.left_frame, style=f"{self.style.prefix}.TFrame")
-        btn_frame.pack(fill="x", padx=self.section_items_padding_x, pady=(self.button_padding, 0))
+        if button:
+            text, cmd = button
+            ttk.Button(
+                frame,
+                text=text,
+                width=3,  # small square button
+                padding=3,
+                command=cmd,
+                style=f"{self.style.prefix}.TButton",
+            ).pack(side="right", padx=(5, 0))
 
-        ttk.Button(
-            btn_frame, text="Plot", command=self.plot_selected_data, style=f"{self.style.prefix}.TButton"
-        ).pack(anchor="e")
-
-        # --- Simulations Section ---
-        self.section_separator("SIMULATIONS")
+        return cb, var
 
     def right_pane(self, container):
-        self.gui.right_frame = ttk.Frame(container, style=f"{self.style.prefix}.TFrame")
-        container.add(self.gui.right_frame, weight=4)
+        self.gui.right_frame = ttk.Frame(container, style=f"{self.style.prefix}.TFrame", borderwidth=0)
+        container.add(self.gui.right_frame)
 
         # Plot area
         self.gui.fig = Figure(
@@ -258,18 +306,20 @@ class GUIRenderer:
         self.gui.stats_text = tk.Text(
             self.gui.right_frame,
             height=2,
-            bg=self.style.text_bg,
+            bg=self.style.primary_bg,
             fg=self.style.text_fg,
-            insertbackground=self.style.text_fg,
+            insertbackground=self.style.primary_bg,
+            borderwidth= 0.5
         )
-        self.gui.stats_text.pack(fill="x", padx=100, pady=30)
+        self.gui.stats_text.pack(fill="x", padx=0, pady=0)
         self.gui.stats_text.configure(state="disabled")
 
     def panes(self):
-        container = ttk.PanedWindow(orient=tk.HORIZONTAL)
-        container.pack(fill=tk.BOTH, expand=True)
+        container = tk.PanedWindow(orient="horizontal", sashwidth=5, bg="#dcdad5")
+        container.pack(fill="both", expand=True)
         self.left_pane(container)
         self.right_pane(container)
+
 
     def refresh_objects(self):
         objects: List[Object] = self.gui.app.list_objects()
@@ -319,8 +369,15 @@ class GUIRenderer:
 
         self.gui.canvas.draw()
 
-        def display_stats_table(stats):
-            """Display stats in a tabular format in the stats_text widget."""
+        def display_stats_table(stats, fixed_column_width: int | None = None, max_column_width: int = 20, max_value_length: int = 8):
+            """
+            Display stats in a tabular format in the stats_text widget.
+
+            Args:
+                stats: The stats object to display.
+                fixed_column_width: If set, forces all columns to use this exact width.
+                max_column_width: When dynamic, caps each column width to this length.
+            """
             if not stats:
                 return
 
@@ -328,27 +385,137 @@ class GUIRenderer:
             self.gui.stats_text.configure(state="normal")
             self.gui.stats_text.delete("1.0", tk.END)
 
-            # Filter out None values
-            stats_dict = {k: v for k, v in vars(stats).items() if v is not None}
+            # Extract non-None values
+            stats_dict = {k: str(v)[0:max_value_length] for k, v in vars(stats).items() if v is not None}
 
             if not stats_dict:
                 self.gui.stats_text.insert(tk.END, "No statistics available.\n")
                 self.gui.stats_text.configure(state="disabled")
                 return
 
-            # Determine column widths
-            col_widths = {k: max(len(k), len(str(v))) for k, v in stats_dict.items()}
+            if fixed_column_width:
+                col_widths = {k: fixed_column_width for k in stats_dict}
+
+                def fmt_header(k: str) -> str:
+                    s = k[:fixed_column_width]
+                    return f"{s:^{fixed_column_width}}"  # centered
+
+                def fmt_value(v: str) -> str:
+                    s = v[:fixed_column_width]
+                    return f"{s:>{fixed_column_width}}"  # right-aligned
+
+            else:
+                col_widths = {
+                    k: min(max(len(k), len(str(v))), max_column_width)
+                    for k, v in stats_dict.items()
+                }
+
+                def fmt_header(k: str) -> str:
+                    s = k[:col_widths[k]]
+                    return f"{s:^{col_widths[k]}}"  # centered
+
+                def fmt_value(k: str, v: str) -> str:
+                    s = v[:col_widths[k]]
+                    return f"{s:>{col_widths[k]}}"  # right-aligned
 
             # Header row
-            header = " " + " │ ".join(f"{k:>{col_widths[k]}}" for k in stats_dict.keys()) + " │ "
+            header = " " + " │ ".join(fmt_header(k) for k in stats_dict.keys()) + " │ "
             self.gui.stats_text.insert(tk.END, header + "\n")
 
             # Values row
-            values = " " + " │ ".join(f"{str(v):>{col_widths[k]}}" for k, v in stats_dict.items()) + " │ "
+            if fixed_column_width:
+                values = " " + " │ ".join(fmt_value(v) for v in stats_dict.values()) + " │ "
+            else:
+                values = " " + " │ ".join(fmt_value(k, v) for k, v in stats_dict.items()) + " │ "
             self.gui.stats_text.insert(tk.END, values + "\n")
 
             # Disable again
             self.gui.stats_text.configure(state="disabled")
-        # Show stats in text
-        if plot_data.stats:
-            display_stats_table(plot_data.stats)
+        display_stats_table(plot_data.stats)
+
+    def build_title_bar(self):
+        # Title bar frame
+        title_bar = ttk.Frame(self.gui)
+        title_bar.pack(fill="x")
+
+        # Icon (if provided)
+        icon_path = f"{self.gui.gui_path}/assets/logo_small.png"
+        try:
+            self.gui.icon_image = tk.PhotoImage(file=icon_path)
+            icon_label = ttk.Label(title_bar, image=self.gui.icon_image)
+            icon_label.pack(side="left", padx=(5, 2))
+        except Exception as e:
+            print(f"Failed to load icon: {e}")
+
+        # Title text (align left)
+        self.gui.title_label = ttk.Label(
+            title_bar, text="——  See Your Software Grow Like Never Before", anchor="w"
+        )
+        self.gui.title_label.pack(side="left", padx=5)
+
+        # Control buttons
+        btn_frame = ttk.Frame(title_bar)
+        btn_frame.pack(side="right", padx=5)
+
+        style = ttk.Style()
+        style.configure("TitleBar.TButton", relief="flat", padding=5)
+
+        ttk.Button(
+            btn_frame, text="🗕", style="TitleBar.TButton",
+            command=self._minimize
+        ).pack(side="left")
+        ttk.Button(
+            btn_frame, text="🗖", style="TitleBar.TButton",
+            command=self._toggle_maximize
+        ).pack(side="left")
+        ttk.Button(
+            btn_frame, text="✕", style="TitleBar.TButton",
+            command=self.gui.destroy
+        ).pack(side="left")
+
+        # Enable dragging by clicking the title area
+        def start_move(event):
+            self.gui._x = event.x
+            self.gui._y = event.y
+
+        def on_move(event):
+            x = self.gui.winfo_pointerx() - self.gui._x
+            y = self.gui.winfo_pointery() - self.gui._y
+            self.gui.geometry(f"+{x}+{y}")
+
+        # Bind dragging to both the title label and the icon (if present)
+        title_bar.bind("<Button-1>", start_move)
+        title_bar.bind("<B1-Motion>", on_move)
+        self.gui.title_label.bind("<Button-1>", start_move)
+        self.gui.title_label.bind("<B1-Motion>", on_move)
+        if icon_path:
+            icon_label.bind("<Button-1>", start_move)
+            icon_label.bind("<B1-Motion>", on_move)
+
+    def _minimize(self):
+        self.gui.update_idletasks()
+        # Enables the OS window management before calling iconify.
+        self.gui.overrideredirect(False)
+        self.gui.iconify()
+
+    def _toggle_maximize(self):
+        if self._is_maximized:
+            self.gui.geometry(self.gui._restore_geometry)
+            self._is_maximized = False
+        else:
+            self.gui._restore_geometry = self.gui.geometry()
+            self.gui.geometry(f"{self.gui.winfo_screenwidth()}x{self.gui.winfo_screenheight()}+0+0")
+            self._is_maximized = True
+
+    def ensure_overrideredirect(self, interval_ms: int = 500):
+        """
+        Ensure the window stays in overrideredirect mode.
+        This checks every `interval_ms` milliseconds.
+        """
+        # Only apply if the window is visible
+        if self.gui.state() != "iconic":  # not minimized
+            if not self.gui.overrideredirect():
+                self.gui.overrideredirect(True)
+
+        # Schedule the next check
+        self.gui.after(interval_ms, self.ensure_overrideredirect, interval_ms)
