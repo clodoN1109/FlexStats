@@ -103,7 +103,6 @@ class App:
             y_label = variable.name
 
         elif plot_type == "distribution":
-            # Prefer frequencies from stats; if absent, build them from the raw values
             freq = getattr(stats, "frequencies", None) or {}
 
             if not freq:

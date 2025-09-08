@@ -1,20 +1,25 @@
 import datetime
 import tkinter as tk
+from idlelib.zoomheight import get_window_geometry
 from tkinter import ttk
 import tkinter.font as tkFont
 from typing import List
-
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from domain import Object, Variable
 from domain.plot import PlotData
 import matplotlib.dates as mdates
+from infrastructure.environment.environment import Env
 from interface.GUI.gui_styles import GUIStyle
 
 
 class GUIRenderer:
 
     def __init__(self, gui):
+        self._is_transparent = True
+        self.canvas = None
+        self.window_height = None
+        self.window_width = None
         self.icon_label = None
         self.gui = gui
         self.style: GUIStyle = gui.style
@@ -154,9 +159,145 @@ class GUIRenderer:
                 except Exception:
                     pass
 
-    def window(self, title: str, resolution: str = "1000x600"):
+    def on_motion(self, event):
+        w, h = self.gui.winfo_width(), self.gui.winfo_height()
+        x, y = event.x_root - self.gui.winfo_rootx(), event.y_root - self.gui.winfo_rooty()
+        b = self.border_size
+
+        if x <= b:
+            self._drag_data["action"], cursor = "resize_l", "size_we"
+        elif x >= w - b:
+            self._drag_data["action"], cursor = "resize_r", "size_we"
+        elif y <= b:
+            self._drag_data["action"], cursor = "resize_t", "size_ns"
+        elif y >= h - b:
+            self._drag_data["action"], cursor = "resize_b", "size_ns"
+        else:
+            self._drag_data["action"], cursor = "move", "arrow"
+
+        self.gui.config(cursor=cursor)
+
+    def on_press(self, event):
+
+        action = self._drag_data.get("action", "")
+
+        # Record mouse and window start positions for both move and resize
+        self._drag_data["x"], self._drag_data["y"] = event.x_root, event.y_root
+        self._drag_data["orig_x"] = self.gui.winfo_x()
+        self._drag_data["orig_y"] = self.gui.winfo_y()
+        self._drag_data["orig_w"] = self.gui.winfo_width()
+        self._drag_data["orig_h"] = self.gui.winfo_height()
+
+        # Only create ghost Toplevel if this is a resize
+        if action.startswith("resize"):
+            self.gui.bind("<B1-Motion>", self.on_drag)
+
+            if not hasattr(self, "ghost_frame"):
+                self.ghost_frame = tk.Toplevel(self.gui)
+                self.ghost_frame.overrideredirect(True)
+                self.ghost_frame.attributes("-alpha", 0.3)  # semi-transparent
+                self.ghost_frame.config(bg="#1f77b4")  # visible ghost for testing
+
+            # Match original window size/position
+            self.ghost_frame.geometry(
+                f"{self._drag_data['orig_w']}x{self._drag_data['orig_h']}+"
+                f"{self._drag_data['orig_x']}+{self._drag_data['orig_y']}"
+            )
+            self.ghost_frame.deiconify()
+            self.ghost_frame.lift()
+
+    def on_drag(self, event):
+        # Only resize if a ghost exists
+        if not hasattr(self, "ghost_frame"):
+            return
+
+        dx = event.x_root - self._drag_data["x"]
+        dy = event.y_root - self._drag_data["y"]
+        x, y, w, h = (self._drag_data["orig_x"], self._drag_data["orig_y"],
+                      self._drag_data["orig_w"], self._drag_data["orig_h"])
+        action = self._drag_data["action"]
+
+        new_x, new_y, new_w, new_h = x, y, w, h
+
+        if action == "resize_r":
+            new_w = max(self.min_width, w + dx)
+        elif action == "resize_b":
+            new_h = max(self.min_height, h + dy)
+        elif action == "resize_br":
+            new_w = max(self.min_width, w + dx)
+            new_h = max(self.min_height, h + dy)
+        elif action == "resize_l":
+            new_w = max(self.min_width, w - dx)
+            new_x = x + (w - new_w)
+        elif action == "resize_t":
+            new_h = max(self.min_height, h - dy)
+            new_y = y + (h - new_h)
+        elif action == "resize_tl":
+            new_w = max(self.min_width, w - dx)
+            new_h = max(self.min_height, h - dy)
+            new_x, new_y = x + (w - new_w), y + (h - new_h)
+        elif action == "resize_tr":
+            new_w = max(self.min_width, w + dx)
+            new_h = max(self.min_height, h - dy)
+            new_y = y + (h - new_h)
+        elif action == "resize_bl":
+            new_w = max(self.min_width, w - dx)
+            new_h = max(self.min_height, h + dy)
+            new_x = x + (w - new_w)
+
+        # Update ghost window
+        self.ghost_frame.geometry(f"{new_w}x{new_h}+{new_x}+{new_y}")
+        self.gui.bind("<ButtonRelease-1>", self.on_release)
+
+    def on_release(self, event):
+        if hasattr(self, "ghost_frame"):
+            # Apply ghost geometry
+            self.gui.geometry(self.ghost_frame.geometry())
+            self.ghost_frame.withdraw()
+
+            # Update drag references so move works again
+            self._drag_data["orig_x"] = self.gui.winfo_x()
+            self._drag_data["orig_y"] = self.gui.winfo_y()
+            self._drag_data["orig_w"] = self.gui.winfo_width()
+            self._drag_data["orig_h"] = self.gui.winfo_height()
+        self.gui.unbind("<ButtonRelease-1>")
+        self.gui.unbind("<B1-Motion>")
+
+    def window(self, title: str, window_width: int, window_height: int):
+        # Remove native decorations
+        self.gui.overrideredirect(True)
         self.gui.title(title)
-        self.gui.geometry(resolution)
+
+        # Get screen dimensions
+        screen = Env.get_window()
+        screen_width = screen.get('screen_width', window_width)
+        screen_height = screen.get('screen_height', window_height)
+
+        # Limit window size to screen size
+        width = min(window_width, screen_width)
+        height = min(window_height, screen_height)
+
+        # Compute top-left coordinates to center the window
+        x = (screen_width - width) // 2
+        y = (screen_height - height) // 2
+
+        self.window_width = width
+        self.window_height = height
+
+        # Apply geometry
+        self.gui.geometry(f"{width}x{height}+{x}+{y}")
+
+        # -------------------------
+        # Make window draggable & resizable
+        # -------------------------
+        self.min_width = 200
+        self.min_height = 150
+        self.border_size = 8
+        self._drag_data = {"x": 0, "y": 0, "action": None}
+
+        # Bind events
+        self.gui.bind("<Motion>", self.on_motion)
+        self.gui.bind("<ButtonPress-1>", self.on_press)
 
     def font(self, font_family, size):
         self.gui.default_font = tkFont.Font(family=font_family, size=size)
@@ -193,7 +334,7 @@ class GUIRenderer:
             "scripts",
             var_name="script_var",
             values=[],
-            button=("▷", self.plot_selected_data, 5),
+            button=("🞂", self.plot_selected_data, 5),
         )
         self.section_item_separator(5)
         # --- MODEL Section ---
@@ -210,7 +351,7 @@ class GUIRenderer:
             "plots",
             var_name="plot_var",
             values=["time series", "distribution"],
-            button=("▷", self.plot_selected_data, 5),  # small plot button
+            button=("🞂", self.plot_selected_data, 5),  # small plot button
         )
         self.section_item_separator(5)
 
@@ -221,7 +362,7 @@ class GUIRenderer:
             "extrapolations",
             var_name="forecast_var",
             values=[],
-            button=("▷", self.plot_selected_data, 5),  # small forecast plot button
+            button=("🞂", self.plot_selected_data, 5),  # small forecast plot button
         )
         self.section_item_separator(5)
 
@@ -410,7 +551,7 @@ class GUIRenderer:
             self.gui.stats_text.delete("1.0", tk.END)
 
             # Extract non-None values
-            stats_dict = {k: str(v)[0:max_value_length] for k, v in vars(stats).items() if v is not None}
+            stats_dict = {k: str(v)[0:max_value_length] for k, v in vars(stats).items() if (v is not None) & (k != "frequencies")}
 
             if not stats_dict:
                 self.gui.stats_text.insert(tk.END, "No statistics available.\n")
@@ -461,12 +602,12 @@ class GUIRenderer:
         try:
             self.gui.icon_image = tk.PhotoImage(file=icon_path)
             self.icon_label = ttk.Label(frame, image=self.gui.icon_image)
-            self.icon_label.pack(side="left", padx=(5, 2))
+            self.icon_label.pack(side="left", padx=(5, 2), pady=(4, 4))
         except Exception as e:
             print(f"Failed to load icon: {e}")
 
     def update_logo_image(self):
-        icon_path = f"{self.gui.gui_path}/assets/icons/logo_{self.style.prefix}.png"
+        icon_path = f"{self.gui.gui_path}/assets/icons/logo_{self.style.prefix}_96px.png"
         self.gui.icon_image = tk.PhotoImage(file=icon_path)
         self.icon_label.configure(image=self.gui.icon_image)
 
@@ -480,7 +621,7 @@ class GUIRenderer:
 
         # Title text (align left)s
         self.gui.title_label = ttk.Label(
-            title_bar, text="——  See your software developing like never before", anchor="w", font=("Courier", 10, "italic")
+            title_bar, text="", anchor="w", font=("Courier", 10, "italic")
         )
         self.gui.title_label.pack(side="left", padx=5)
 
@@ -491,6 +632,7 @@ class GUIRenderer:
         style = ttk.Style()
         style.configure("TitleBar.TButton", relief="flat", padding=5)
 
+        self._add_button(btn_frame, "○/⬤", self._toggle_transparency, 10)
         self._add_button(btn_frame, "☽/☀", self.toggle_dark_mode, 10)
         self._add_button(btn_frame, "🗕", self._minimize, 10)
         self._add_button(btn_frame, "🗖", self._toggle_maximize, 10)
@@ -529,6 +671,14 @@ class GUIRenderer:
         # Enables the OS window management before calling iconify.
         self.gui.overrideredirect(False)
         self.gui.iconify()
+
+    def _toggle_transparency(self):
+        if self._is_transparent:
+            self.gui.attributes("-alpha", 1)
+            self._is_transparent = False
+        else:
+            self.gui.attributes("-alpha", 0.9)
+            self._is_transparent = True
 
     def _toggle_maximize(self):
         if self._is_maximized:

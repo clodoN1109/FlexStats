@@ -1,4 +1,5 @@
 import sys
+import os
 
 from interface.router import Router
 
@@ -9,7 +10,6 @@ def main():
         sys.exit(1)
 
     Router.execute(sys.argv)
-
 
 if __name__ == "__main__":
     main()

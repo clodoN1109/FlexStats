@@ -17,14 +17,11 @@ class TkinterGUI(tk.Tk):
         self.style = GUIStyle("dark")
 
         renderer = GUIRenderer(self)
+        renderer.window("flexstats", 1000, 600)
         renderer.config_window_navbar()
         renderer.font("courier", 10)
-        renderer.window("flexstats", "1000x600")
         renderer.build_title_bar()
         renderer.panes()
         renderer.refresh_objects()
         renderer.ensure_overrideredirect()
         renderer.apply_style()
-
-
-

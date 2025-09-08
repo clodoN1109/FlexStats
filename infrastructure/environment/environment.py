@@ -1,6 +1,9 @@
 import inspect
 import sys
 from pathlib import Path
+import platform
+import ctypes
+import subprocess
 
 class Env:
 
@@ -26,3 +29,34 @@ class Env:
     @staticmethod
     def get_events_file_path(filename: str = "events.json") -> Path:
         return Env.base_path() / filename
+
+    def get_window() -> dict:
+        system = platform.system()
+        info = {"os": system}
+
+        try:
+            if system == "Windows":
+                user32 = ctypes.windll.user32
+                info["screen_width"] = user32.GetSystemMetrics(0)
+                info["screen_height"] = user32.GetSystemMetrics(1)
+
+            elif system == "Linux":
+                # use xrandr to get current resolution
+                output = subprocess.check_output("xrandr | grep '*' | awk '{print $1}'", shell=True)
+                width, height = map(int, output.decode().strip().split("x"))
+                info["screen_width"] = width
+                info["screen_height"] = height
+
+            elif system == "Darwin":  # macOS
+                output = subprocess.check_output(
+                    "system_profiler SPDisplaysDataType | grep Resolution", shell=True
+                ).decode().strip()
+                # Example: "Resolution: 2560 x 1600 Retina"
+                parts = [int(p) for p in output.split() if p.isdigit()]
+                if len(parts) >= 2:
+                    info["screen_width"], info["screen_height"] = parts[0], parts[1]
+
+        except Exception as e:
+            info["error"] = str(e)
+
+        return info
