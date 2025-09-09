@@ -119,5 +119,931 @@
                 ]
             }
         ]
+    },
+    {
+        "timestamp": "2025-09-09T03:50:02.848625+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T03:50:12.159494+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:23:02.260702+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 20.120290380590884
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 55
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:23:26.428384+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 28.997817651620224
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 66
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:23:32.004607+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 19.284218214295674
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 36
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:23:34.056738+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 19.24969762488861
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 47
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:23:35.728690+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 16.957001460341534
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 63
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:23:37.996527+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 29.161346944031685
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 52
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:25:21.368805+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 29.161346944031685
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 52
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:26:05.192873+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 29.513606100531746
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 50
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:26:13.412670+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 23.697860009849386
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 58
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:26:42.280716+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 23.708062230395864
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 58
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:28:58.989127+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 25.336971255025198
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 77
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:29:00.828711+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 27.151913567007064
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 44
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:29:02.860375+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 16.412246391766125
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 43
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-09T04:29:05.630000+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 26.31672437812214
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 56
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
     }
 ]

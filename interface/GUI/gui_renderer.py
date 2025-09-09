@@ -1,4 +1,7 @@
 import datetime
+import shutil
+import subprocess
+import sys
 import tkinter as tk
 from tkinter import ttk, filedialog
 import tkinter.font as tkFont
@@ -18,6 +21,7 @@ from interface.GUI.gui_styles import GUIStyle
 class GUIRenderer:
 
     def __init__(self, gui):
+        self.scripts = None
         self._is_transparent = True
         self.canvas = None
         self.window_height = None
@@ -336,7 +340,7 @@ class GUIRenderer:
             "scripts",
             var_name="script_var",
             values=[],
-            button=("🞂", "", 5),
+            button=("🞂", self.run_selected_script, 5),
         )
         self.section_item_separator(5)
         # --- MODEL Section ---
@@ -367,6 +371,50 @@ class GUIRenderer:
             button=("🞂", self.plot_selected_data, 5),  # small forecast plot button
         )
         self.section_item_separator(5)
+
+    def run_selected_script(self):
+        script_name_ext = self.gui.script_var.get()
+        selected_script = next(
+            (s for s in self.scripts if (s.name + s.extension) == script_name_ext),
+            None
+        )
+
+        if selected_script is None:
+            print(f"No script found for: {script_name_ext}")
+            return
+
+        ext = selected_script.extension.lower()
+        path = selected_script.path
+
+        # Map extension -> interpreter command
+        interpreters = {
+            ".py": [sys.executable],  # current python
+            ".ps1": ["powershell", "-ExecutionPolicy", "Bypass", "-File"],
+            ".sh": ["bash"],
+            ".bat": None,  # run directly
+            ".rb": ["ruby"],
+        }
+
+        if ext not in interpreters:
+            print(f"Unsupported script type: {ext}")
+            return
+
+        cmd = interpreters[ext]
+
+        # For batch files, run directly
+        if cmd is None:
+            cmdline = [path]
+        else:
+            if shutil.which(cmd[0]) is None:
+                print(f"Interpreter not found: {cmd[0]}")
+                return
+            cmdline = cmd + [path]
+
+        try:
+            print(f"Running: {' '.join(cmdline)}")
+            subprocess.run(cmdline, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Script failed with exit code {e.returncode}")
 
     # --- Helper Methods ---
     def _add_button(self, frame, text, cmd, width):
@@ -471,8 +519,8 @@ class GUIRenderer:
     def refresh_scripts(self):
         current_script = self.gui.script_var.get()
 
-        scripts: List[Script] = self.gui.app.list_scripts()
-        script_names = [script.name + script.extension for script in scripts]
+        self.scripts: List[Script] = self.gui.app.list_scripts()
+        script_names = [script.name + script.extension for script in self.scripts]
         self.gui.script_cb["values"] = script_names
 
         # Restore selection if still valid, otherwise pick first

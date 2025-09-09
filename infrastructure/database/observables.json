@@ -6,5 +6,9 @@
     {
         "name": "B",
         "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/infrastructure/database/observable_B.json"
+    },
+    {
+        "name": "test-object",
+        "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/scripts/test-event.json"
     }
 ]

@@ -30,7 +30,6 @@ class Env:
     def get_events_file_path(filename: str = "events.json") -> Path:
         return Env.base_path() / filename
 
-
     @staticmethod
     def get_scripts_dir() -> Path:
         if getattr(sys, "frozen", False):
