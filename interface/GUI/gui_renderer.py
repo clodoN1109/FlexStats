@@ -1,17 +1,19 @@
 import datetime
 import tkinter as tk
-from idlelib.zoomheight import get_window_geometry
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import tkinter.font as tkFont
 from typing import List
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from application.app import App
 from domain import Object, Variable
 from domain.plot import PlotData
 import matplotlib.dates as mdates
-from infrastructure.environment.environment import Env
-from interface.GUI.gui_styles import GUIStyle
 
+from domain.script import Script
+from infrastructure.environment.environment import Env
+from infrastructure.persistence.json_repository import JsonRepository
+from interface.GUI.gui_styles import GUIStyle
 
 class GUIRenderer:
 
@@ -325,16 +327,16 @@ class GUIRenderer:
         self._add_button_row(
             self.gui.left_frame,
             [
-                ("➕ observable", self.plot_selected_data),
-                ("➕ event", self.plot_selected_data),
+                ("➕ observable", self.new_observable),
+                ("➕ event", self.new_event),
             ],
         )
-        self._add_dropdown(
+        (self.gui.script_cb, self.gui.script_var) = self._add_dropdown(
             self.gui.left_frame,
             "scripts",
             var_name="script_var",
             values=[],
-            button=("🞂", self.plot_selected_data, 5),
+            button=("🞂", "", 5),
         )
         self.section_item_separator(5)
         # --- MODEL Section ---
@@ -466,23 +468,56 @@ class GUIRenderer:
         self.left_pane(self.gui.container)
         self.right_pane(self.gui.container)
 
-    def refresh_objects(self):
-        objects: List[Object] = self.gui.app.list_objects()
-        self.gui.obj_cb["values"] = [obj.name for obj in objects]
-        if objects:
-            self.gui.obj_var.set(objects[0].name)
-            self.refresh_variables()
+    def refresh_scripts(self):
+        current_script = self.gui.script_var.get()
 
+        scripts: List[Script] = self.gui.app.list_scripts()
+        script_names = [script.name + script.extension for script in scripts]
+        self.gui.script_cb["values"] = script_names
+
+        # Restore selection if still valid, otherwise pick first
+        if current_script in script_names:
+            self.gui.script_var.set(current_script)
+        elif script_names:
+            self.gui.script_var.set(script_names[0])
+
+    def refresh_objects(self):
+        # Remember current selection before refresh
+        current_obj = self.gui.obj_var.get()
+
+        objects: List[Object] = self.gui.app.list_objects()
+        obj_names = [obj.name for obj in objects]
+        self.gui.obj_cb["values"] = obj_names
+
+        # Restore selection if still valid, otherwise pick first
+        if current_obj in obj_names:
+            self.gui.obj_var.set(current_obj)
+        elif obj_names:
+            self.gui.obj_var.set(obj_names[0])
+
+        # Refresh variables according to the (possibly new) selection
+        self.refresh_variables()
+
+        # Ensure combobox selection refresh binding
         self.gui.obj_cb.bind("<<ComboboxSelected>>", lambda e: self.refresh_variables())
 
     def refresh_variables(self):
+        # Remember current variable selection before refresh
+        current_var = self.gui.var_var.get()
+
         obj_name = self.gui.obj_var.get()
         if not obj_name:
             return
+
         variables: List[Variable] = self.gui.app.list_variables(obj_name)
-        self.gui.var_cb["values"] = [var.name for var in variables]
-        if variables:
-            self.gui.var_var.set(variables[0].name)
+        var_names = [var.name for var in variables]
+        self.gui.var_cb["values"] = var_names
+
+        # Restore selection if still valid, otherwise pick first
+        if current_var in var_names:
+            self.gui.var_var.set(current_var)
+        elif var_names:
+            self.gui.var_var.set(var_names[0])
 
     def plot_selected_data(self):
         obj_name = self.gui.obj_var.get()
@@ -708,3 +743,54 @@ class GUIRenderer:
         else:
             self.style = GUIStyle("dark")
         self.apply_style()
+
+    def new_observable(self):
+        # Create a temporary popup
+        popup = tk.Toplevel(self.gui)
+        popup.title("New Observable")
+        popup.transient(self.gui)  # keep above main window
+        popup.grab_set()  # make it modal
+
+        # Labels + fields
+        ttk.Label(popup, text="Name:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        name_var = tk.StringVar()
+        name_entry = ttk.Entry(popup, textvariable=name_var, width=30)
+        name_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        ttk.Label(popup, text="Path:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        path_var = tk.StringVar()
+        path_entry = ttk.Entry(popup, textvariable=path_var, width=30)
+        path_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        # Button to browse filesystem for path
+        def browse_path():
+            path = filedialog.askopenfilename(title="Select File")  # or askdirectory()
+            if path:
+                path_var.set(path)
+
+        browse_btn = ttk.Button(popup, text="Browse", command=browse_path)
+        browse_btn.grid(row=1, column=2, padx=5, pady=5)
+
+        # Submit callback
+        def submit():
+            name = name_var.get().strip()
+            location = path_var.get().strip()
+            if name and location:
+                self.gui.app.new_observable(name, location)
+                popup.destroy()  # close the popup
+            else:
+                tk.messagebox.showerror("Error", "Both fields are required!")
+
+        # Buttons
+        ttk.Button(popup, text="OK", command=submit).grid(row=2, column=0, columnspan=2, pady=10)
+        ttk.Button(popup, text="Cancel", command=popup.destroy).grid(row=2, column=2, pady=10)
+
+        # Focus on the name field
+        name_entry.focus()
+
+    def new_event(self):
+        self.gui.app.new_event()
+        self.gui.app.update_repository(JsonRepository())
+        self.refresh_objects()
+        self.plot_selected_data()
+

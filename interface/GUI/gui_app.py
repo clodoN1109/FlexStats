@@ -23,5 +23,6 @@ class TkinterGUI(tk.Tk):
         renderer.build_title_bar()
         renderer.panes()
         renderer.refresh_objects()
+        renderer.refresh_scripts()
         renderer.ensure_overrideredirect()
         renderer.apply_style()

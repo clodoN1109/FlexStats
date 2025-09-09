@@ -1,95 +1,9 @@
 [
     {
-        "timestamp": "2025-09-01T03:45:10.148956+00:00",
+        "timestamp": "2025-09-09T01:09:29.922822+00:00",
         "records": [
             {
-                "observable": "observable_A",
-                "state": [
-                    {
-                        "name": "build number",
-                        "value": 283
-                    },
-                    {
-                        "name": "configuration",
-                        "value": "Debug"
-                    },
-                    {
-                        "name": "errors",
-                        "value": 12
-                    },
-                    {
-                        "name": "warnings",
-                        "value": 23
-                    }
-                ]
-            },
-            {
-                "observable": "observable_B",
-                "state": [
-                    {
-                        "name": "stamina",
-                        "value": 280
-                    },
-                    {
-                        "name": "HP",
-                        "value": 2241
-                    },
-                    {
-                        "name": "Exp",
-                        "value": 7
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "timestamp": "2025-09-01T03:45:50.162905+00:00",
-        "records": [
-            {
-                "observable": "observable_A",
-                "state": [
-                    {
-                        "name": "build number",
-                        "value": 284
-                    },
-                    {
-                        "name": "configuration",
-                        "value": "Debug"
-                    },
-                    {
-                        "name": "errors",
-                        "value": 16
-                    },
-                    {
-                        "name": "warnings",
-                        "value": 29
-                    }
-                ]
-            },
-            {
-                "observable": "observable_B",
-                "state": [
-                    {
-                        "name": "stamina",
-                        "value": 301
-                    },
-                    {
-                        "name": "HP",
-                        "value": 2420
-                    },
-                    {
-                        "name": "Exp",
-                        "value": 9
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "timestamp": "2025-09-01T20:53:31.668822+00:00",
-        "records": [
-            {
-                "observable": "observable_A",
+                "observable": "A",
                 "state": [
                     {
                         "name": "build number",
@@ -101,38 +15,21 @@
                     },
                     {
                         "name": "errors",
-                        "value": 20
+                        "value": 5010
                     },
                     {
                         "name": "warnings",
-                        "value": 29
-                    }
-                ]
-            },
-            {
-                "observable": "observable_B",
-                "state": [
-                    {
-                        "name": "stamina",
-                        "value": 301
-                    },
-                    {
-                        "name": "HP",
-                        "value": 2420
-                    },
-                    {
-                        "name": "Exp",
-                        "value": 9
+                        "value": 290
                     }
                 ]
             }
         ]
     },
     {
-        "timestamp": "2025-09-01T21:51:41.212121+00:00",
+        "timestamp": "2025-09-09T01:09:36.547123+00:00",
         "records": [
             {
-                "observable": "observable_A",
+                "observable": "A",
                 "state": [
                     {
                         "name": "build number",
@@ -144,38 +41,21 @@
                     },
                     {
                         "name": "errors",
-                        "value": 20
+                        "value": 5010
                     },
                     {
                         "name": "warnings",
-                        "value": 29
-                    }
-                ]
-            },
-            {
-                "observable": "observable_B",
-                "state": [
-                    {
-                        "name": "stamina",
-                        "value": 301
-                    },
-                    {
-                        "name": "HP",
-                        "value": 2420
-                    },
-                    {
-                        "name": "Exp",
-                        "value": 9
+                        "value": 290
                     }
                 ]
             }
         ]
     },
     {
-        "timestamp": "2025-09-01T22:06:38.460398+00:00",
+        "timestamp": "2025-09-09T01:09:37.066893+00:00",
         "records": [
             {
-                "observable": "observable_A",
+                "observable": "A",
                 "state": [
                     {
                         "name": "build number",
@@ -187,38 +67,21 @@
                     },
                     {
                         "name": "errors",
-                        "value": 20
+                        "value": 5010
                     },
                     {
                         "name": "warnings",
-                        "value": 29
-                    }
-                ]
-            },
-            {
-                "observable": "observable_B",
-                "state": [
-                    {
-                        "name": "stamina",
-                        "value": 301
-                    },
-                    {
-                        "name": "HP",
-                        "value": 2420
-                    },
-                    {
-                        "name": "Exp",
-                        "value": 9
+                        "value": 290
                     }
                 ]
             }
         ]
     },
     {
-        "timestamp": "2025-09-02T03:00:59.115789+00:00",
+        "timestamp": "2025-09-09T01:10:11.659365+00:00",
         "records": [
             {
-                "observable": "observable_A",
+                "observable": "A",
                 "state": [
                     {
                         "name": "build number",
@@ -230,72 +93,16 @@
                     },
                     {
                         "name": "errors",
-                        "value": 20
+                        "value": 5010
                     },
                     {
                         "name": "warnings",
-                        "value": 29
+                        "value": 290
                     }
                 ]
             },
             {
-                "observable": "observable_B",
-                "state": [
-                    {
-                        "name": "stamina",
-                        "value": 301
-                    },
-                    {
-                        "name": "HP",
-                        "value": 2420
-                    },
-                    {
-                        "name": "Exp",
-                        "value": 9
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "timestamp": "2025-09-04T19:02:16.715394+00:00",
-        "records": [
-            {
-                "observable": "observable_A",
-                "state": []
-            },
-            {
-                "observable": "observable_B",
-                "state": []
-            }
-        ]
-    },
-    {
-        "timestamp": "2025-09-04T19:03:53.110902+00:00",
-        "records": [
-            {
-                "observable": "observable_A",
-                "state": [
-                    {
-                        "name": "build number",
-                        "value": 284
-                    },
-                    {
-                        "name": "configuration",
-                        "value": "Release"
-                    },
-                    {
-                        "name": "errors",
-                        "value": 20
-                    },
-                    {
-                        "name": "warnings",
-                        "value": 29
-                    }
-                ]
-            },
-            {
-                "observable": "observable_B",
+                "observable": "B",
                 "state": [
                     {
                         "name": "stamina",

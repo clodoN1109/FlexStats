@@ -10,6 +10,7 @@ class CLIParser:
             "list-observables"      : ListObservablesCommand,
             "list-objects"          : ListObjectsCommand,
             "list-variables"        : ListVariablesCommand,
+            "list-scripts"          : ListScriptsCommand,
             "new-event"             : NewEventCommand,
             "compute-stats-range"   : ComputeStatsWithinRangeCommand,
             "compute-stats-values"  : ComputeStatsForValuesCommand,

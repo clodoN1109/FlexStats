@@ -1,6 +1,6 @@
+import os
 from datetime import datetime, timezone
 from typing import List
-
 from application.ports.i_repository import IRepository
 from domain import (
     RangeDomain, EnumerationDomain,
@@ -9,6 +9,8 @@ from domain import (
     Stats, StatsAnalyzer,
     Variable, VariableData,
 )
+from domain.script import Script
+from infrastructure.environment.environment import Env
 
 
 class App:
@@ -18,6 +20,12 @@ class App:
         self.observables: List[Observable] = self.repository.load_observables()
         self.events     : List[Event]      = self.repository.load_events()
         self.model      : Model            = Model(self.events)
+
+    def update_repository(self, repository: IRepository):
+        self.repository: IRepository = repository
+        self.observables: List[Observable] = self.repository.load_observables()
+        self.events: List[Event] = self.repository.load_events()
+        self.model: Model = Model(self.events)
 
     def new_observable(self, name: str, source: str):
         obs = Observable(name=name, source=source)
@@ -48,6 +56,29 @@ class App:
         obj = next(item for item in self.model.objects if item.name == object_name)
         variables = list(obj.variables.values())
         return variables
+
+    @staticmethod
+    def list_scripts() -> List[Script]:
+        scripts_path = Env.get_scripts_dir()
+        print(scripts_path)
+
+        allowed_exts = {".py", ".ps1", ".sh", ".bat", ".rb"}
+        scripts: List[Script] = []
+
+        if not os.path.isdir(scripts_path):
+            return scripts
+
+        for fname in os.listdir(scripts_path):
+            fpath = os.path.join(scripts_path, fname)
+            if not os.path.isfile(fpath):
+                continue
+
+            name, ext = os.path.splitext(fname)
+            if ext.lower() in allowed_exts:
+                scripts.append(Script(name, ext.lower(), fpath))
+
+        return scripts
+
 
     def compute_stats_within_range(self, object_name: str, variable_name: str, domain_min, domain_max) -> Stats:
         obj = next(item for item in self.model.objects if item.name == object_name)

@@ -1,10 +1,10 @@
 [
     {
-        "name": "observable_A",
-        "source": "C:\\Users\\clovi\\OneDrive\\Área de Trabalho\\Clodo\\Work\\Projects\\Incubator\\FlexStats\\Dev\\src\\infrastructure\\database\\observable_A.json"
+        "name": "A",
+        "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/infrastructure/database/observable_A.json"
     },
     {
-        "name": "observable_B",
-        "source": "C:\\Users\\clovi\\OneDrive\\Área de Trabalho\\Clodo\\Work\\Projects\\Incubator\\FlexStats\\Dev\\src\\infrastructure\\database\\observable_B.json"
+        "name": "B",
+        "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/infrastructure/database/observable_B.json"
     }
 ]

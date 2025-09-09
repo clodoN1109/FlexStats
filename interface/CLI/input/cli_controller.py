@@ -27,6 +27,9 @@ class CLIController:
         if isinstance(cmd, ListObjectsCommand):
             print(app.list_objects())
 
+        if isinstance(cmd, ListScriptsCommand):
+            print(app.list_scripts())
+
         if isinstance(cmd, ListVariablesCommand):
             print(app.list_variables(cmd.object_name))
 

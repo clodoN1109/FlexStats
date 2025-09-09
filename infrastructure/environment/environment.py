@@ -30,6 +30,17 @@ class Env:
     def get_events_file_path(filename: str = "events.json") -> Path:
         return Env.base_path() / filename
 
+
+    @staticmethod
+    def get_scripts_dir() -> Path:
+        if getattr(sys, "frozen", False):
+            # Running in a PyInstaller bundle
+            return Path(sys.executable).parent.resolve().joinpath("scripts").resolve()
+        else:
+            # Running in normal Python environment
+            return Path(__file__).parent.parent.parent.joinpath("scripts").resolve()
+
+    @staticmethod
     def get_window() -> dict:
         system = platform.system()
         info = {"os": system}

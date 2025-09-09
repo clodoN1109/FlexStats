@@ -39,6 +39,18 @@ class ListObservablesCommand(Command):
         cls.args = args
 
 @dataclass
+class ListScriptsCommand(Command):
+
+    @classmethod
+    def command_name(cls) -> str:
+        return "list-scripts"
+
+    @classmethod
+    def __init__(cls, args: list[str]):
+        cls.name = cls.command_name()
+        cls.args = args
+
+@dataclass
 class ListObjectsCommand(Command):
 
     @classmethod
