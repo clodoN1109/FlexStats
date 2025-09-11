@@ -10,5 +10,9 @@
     {
         "name": "test-object",
         "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/scripts/test-event.json"
+    },
+    {
+        "name": "ISS",
+        "source": "https://api.keeptrack.space/v2/sat/25544/omm"
     }
 ]

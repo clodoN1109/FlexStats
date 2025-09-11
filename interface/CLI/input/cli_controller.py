@@ -58,9 +58,14 @@ class CLIController:
             print(variable_data)
 
         if isinstance(cmd, GetPlotDataCommand):
+            obj = next(item for item in app.model.objects if item.name == cmd.object_name)
+            variable = obj.variables[cmd.variable_name]
+            variable_data = variable.data
+
             plot_data = app.get_plot_data(
                 cmd.object_name,
                 cmd.variable_name,
-                cmd.plot_type
+                cmd.plot_type,
+                variable_data
             )
             print(plot_data)

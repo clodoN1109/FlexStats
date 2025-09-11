@@ -5,22 +5,31 @@ import sys
 import tkinter as tk
 from tkinter import ttk, filedialog
 import tkinter.font as tkFont
-from typing import List
+from typing import List, Optional
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from application.app import App
+from pymsgbox import buttonsFrame
+
 from domain import Object, Variable
 from domain.plot import PlotData
 import matplotlib.dates as mdates
-
+from tkcalendar import DateEntry
 from domain.script import Script
 from infrastructure.environment.environment import Env
 from infrastructure.persistence.json_repository import JsonRepository
+from interface.GUI.assets.components import SimpleDateEntry
 from interface.GUI.gui_styles import GUIStyle
 
 class GUIRenderer:
 
     def __init__(self, gui):
+        self.resolution_var = None
+        self.plots_dropdown_cb = None
+        self.plots_dropdown_var = None
+        self.resolution_entry = None
+        self.resolution_label = None
+        self.extrapolation_var = None
+        self.extrapolation_cb = None
         self.scripts = None
         self._is_transparent = True
         self.canvas = None
@@ -120,6 +129,7 @@ class GUIRenderer:
                         widget.configure(style="TitleBar.TButton")
                     else:
                         widget.configure(style=f"{prefix}.TButton")
+
                 elif isinstance(widget, ttk.Combobox):
                     widget.configure(style=f"{prefix}.TCombobox")
                 elif isinstance(widget, ttk.Separator):
@@ -352,24 +362,96 @@ class GUIRenderer:
 
         # --- STATISTICS Section ---
         self.section_separator("STATISTICS")
-        self._add_dropdown(
+        (self.plots_dropdown_cb, self.plots_dropdown_var) = self._add_dropdown(
             self.gui.left_frame,
             "plots",
             var_name="plot_var",
             values=["time series", "distribution"],
-            button=("🞂", self.plot_selected_data, 5),  # small plot button
+            button=("🞂", self.plot_data, 5),  # small plot button
         )
+
+        self.section_item_separator(1)
+
+        # --- Min date field ---
+        min_frame = ttk.Frame(self.gui.left_frame)
+        min_frame.pack(fill="x", pady=2)
+        ttk.Label(
+            min_frame,
+            text="min date:",
+            style=f"{self.style.prefix}.TLabel"
+        ).grid(row=0, column=0, sticky="w", padx=(14, 18), pady=self.section_items_padding_y)
+
+        self.min_date_entry = SimpleDateEntry(min_frame, year_range=10)
+        self.min_date_entry.grid(row=0, column=1, sticky="w")
+        self.min_date_entry.clear()  # start empty
+
+        # --- Max date field ---
+        max_frame = ttk.Frame(self.gui.left_frame)
+        max_frame.pack(fill="x", pady=2)
+        ttk.Label(
+            max_frame,
+            text="max date:",
+            style=f"{self.style.prefix}.TLabel"
+        ).grid(row=0, column=0, sticky="w", padx=(14, 18), pady=self.section_items_padding_y)
+
+        self.max_date_entry = SimpleDateEntry(max_frame, year_range=10)
+        self.max_date_entry.grid(row=0, column=1, sticky="w")
+        self.max_date_entry.clear()
+
         self.section_item_separator(5)
+
+        # Resolution
+        # --- Container frame for resolution label + entry ---
+        self.resolution_frame = ttk.Frame(self.gui.left_frame)
+
+        # Label + Spinbox inside the frame
+        self.resolution_label = ttk.Label(
+            self.resolution_frame,
+            text="resolution:",
+            style=f"{self.style.prefix}.TLabel"
+        )
+        self.resolution_label.grid(row=0, column=0, sticky="w", padx=(12, 4))
+        # Spinbox for integer values, min=1, max=100000, initial=1
+        self.resolution_var = tk.IntVar(value=1)
+        self.resolution_spinbox = tk.Spinbox(
+            self.resolution_frame,
+            from_=0,
+            to=10,
+            increment=1,
+            textvariable=self.resolution_var,
+            width=2,
+            background="#dcdad5",
+        )
+        self.resolution_spinbox.grid(row=0, column=1, sticky="w")
+
+        # Function to show/hide the resolution row
+        def update_resolution_visibility(*args):
+            if self.gui.plot_var.get() == "distribution":
+                # Only pack the frame after the plots dropdown
+                self.resolution_frame.pack(
+                    fill="x",
+                    pady=2,
+                    anchor="w",
+                    after=max_frame  # must be the actual dropdown widget
+                )
+            else:
+                self.resolution_frame.pack_forget()
+
+        # Trace plot_var changes
+        self.gui.plot_var.trace_add("write", update_resolution_visibility)
+        update_resolution_visibility()
+        self.resolution_var.set(2)
 
         # --- FORECASTING Section ---
         self.section_separator("FORECASTING")
-        self._add_dropdown(
+        (self.extrapolation_cb, self.extrapolation_var) = self._add_dropdown(
             self.gui.left_frame,
             "extrapolations",
-            var_name="forecast_var",
-            values=[],
-            button=("🞂", self.plot_selected_data, 5),  # small forecast plot button
+            var_name="extrapolation_var",
+            values=["", "linear", "quadratic"],
+            button=""  # small forecast plot button
         )
+
         self.section_item_separator(5)
 
     def run_selected_script(self):
@@ -388,10 +470,10 @@ class GUIRenderer:
 
         # Map extension -> interpreter command
         interpreters = {
-            ".py": [sys.executable],  # current python
+            ".py": [sys.executable],
             ".ps1": ["powershell", "-ExecutionPolicy", "Bypass", "-File"],
             ".sh": ["bash"],
-            ".bat": None,  # run directly
+            ".bat": None,
             ".rb": ["ruby"],
         }
 
@@ -567,40 +649,96 @@ class GUIRenderer:
         elif var_names:
             self.gui.var_var.set(var_names[0])
 
-    def plot_selected_data(self):
+    def get_plot_data(self, extrapolation_method = None, x_min = None, x_max = None, resolution = 2) -> Optional[PlotData]:
+        """
+        Common logic to fetch PlotData, either from actual variable data
+        or extrapolation.
+        """
         obj_name = self.gui.obj_var.get()
         var_name = self.gui.var_var.get()
         plot_type = self.gui.plot_var.get()
         if not (obj_name and var_name and plot_type):
-            return
+            return None
 
-        # Use application layer to get PlotData
-        plot_data: PlotData = self.gui.app.get_plot_data(obj_name, var_name, plot_type)
+        obj = next(item for item in self.gui.app.model.objects if item.name == obj_name)
+        variable = obj.variables[var_name]
+
+        if extrapolation_method:
+            variable_data = self.gui.app.get_extrapolation_plot_data(
+                obj_name, var_name,
+                x_min = x_min, x_max= x_max, precision=360, method=extrapolation_method,
+            )
+        else:
+            variable_data = variable.data
+
+        return self.gui.app.get_plot_data(obj_name, var_name, plot_type, variable_data, resolution)
+
+    def render_plot(self, plot_data: PlotData, x_min=None, x_max=None):
+        """Handles the actual matplotlib drawing."""
+        import datetime
+
         # Clear previous plot
         self.gui.ax.clear()
         self.gui.ax.grid(color=self.style.grid_color, linestyle="--", linewidth=0.5)
 
-        # Plot x vs y
         if plot_data.plot_type == "time series":
-            self.gui.ax.plot(plot_data.x, plot_data.y, marker="o")
+            if self.extrapolation_var.get() != "":
+                # Smooth line only for extrapolation
+                self.gui.ax.plot(
+                    plot_data.x,
+                    plot_data.y,
+                    linestyle="-",  # solid line
+                    marker="",  # no markers
+                    linewidth=1.8,
+                    color=self.style.primary_fg
+                )
+            else:
+                # Normal case: line with dots
+                self.gui.ax.plot(
+                    plot_data.x,
+                    plot_data.y,
+                    linestyle="-",
+                    marker="o",
+                    markersize=4,
+                    linewidth=1.2,
+                    color=self.style.primary_fg
+                )
 
-            # Format x-axis as MM/DD/YYYY and show hours:minutes, but in local time
-            local_tz = datetime.datetime.now().astimezone().tzinfo
             # Local timezone-aware formatter
+            local_tz = datetime.datetime.now().astimezone().tzinfo
             formatter = mdates.DateFormatter('%m/%d/%Y\n%H:%M', tz=local_tz)
             self.gui.ax.xaxis.set_major_formatter(formatter)
 
-            # Force labels to stay horizontal
             for label in self.gui.ax.get_xticklabels():
                 label.set_rotation(0)
-                label.set_ha("center")  # center them under the tick
+                label.set_ha("center")
 
-            # Reduce tick label font size
             self.gui.ax.tick_params(axis="x", labelsize=8)
             self.gui.ax.tick_params(axis="y", labelsize=8)
-        else:
-            self.gui.ax.bar(plot_data.x, plot_data.y)
 
+            # --- Handle min/max x-limits safely ---
+            try:
+                # Get values directly as datetime (or None if blank)
+                x_min_dt = x_min if x_min else None
+                x_max_dt = x_max if x_max else None
+
+                # Only apply if at least one limit is valid
+                if x_min_dt or x_max_dt:
+                    if x_min_dt and x_max_dt and x_min_dt == x_max_dt:
+                        # expand by one day to avoid identical limits
+                        x_max_dt = x_max_dt + datetime.timedelta(days=1)
+
+                    self.gui.ax.set_xlim(left=x_min_dt, right=x_max_dt)
+
+
+            except ValueError:
+                # If parsing fails, ignore limits
+                pass
+
+        if plot_data.plot_type == "distribution":
+            self.gui.ax.bar(plot_data.x, plot_data.y, width=0.05)
+
+        # Titles and labels
         self.gui.ax.set_title(plot_data.title.upper(), color=self.style.primary_fg)
         if plot_data.subtitle:
             subtitle_obj = self.gui.ax.set_title(
@@ -609,7 +747,6 @@ class GUIRenderer:
                 loc="right",
                 color=self.style.primary_fg,
             )
-            # make sure it stays styled on theme refresh
             self.gui.subtitle_text = subtitle_obj
 
         self.gui.ax.set_xlabel(plot_data.x_label.upper(), color=self.style.primary_fg)
@@ -617,69 +754,79 @@ class GUIRenderer:
 
         self.gui.canvas.draw()
 
-        def display_stats_table(stats, fixed_column_width: int | None = None, max_column_width: int = 20, max_value_length: int = 8):
-            """
-            Display stats in a tabular format in the stats_text widget.
+    def plot_data(self):
 
-            Args:
-                stats: The stats object to display.
-                fixed_column_width: If set, forces all columns to use this exact width.
-                max_column_width: When dynamic, caps each column width to this length.
-            """
-            if not stats:
-                return
+        data = self.get_plot_data(extrapolation_method=self.gui.extrapolation_var.get(),
+                                  x_min=self.min_date_entry.get_date(),
+                                  x_max=self.max_date_entry.get_date(),
+                                  resolution= self.resolution_var.get())
+        if data:
+            self.render_plot(data, x_min=self.min_date_entry.get_date(), x_max=self.max_date_entry.get_date())
+            self.display_stats_table(data.stats)
 
-            # Enable the Text widget temporarily
-            self.gui.stats_text.configure(state="normal")
-            self.gui.stats_text.delete("1.0", tk.END)
+    def display_stats_table(self, stats, fixed_column_width: int | None = None, max_column_width: int = 20, max_value_length: int = 8):
+        """
+        Display stats in a tabular format in the stats_text widget.
 
-            # Extract non-None values
-            stats_dict = {k: str(v)[0:max_value_length] for k, v in vars(stats).items() if (v is not None) & (k != "frequencies")}
+        Args:
+            stats: The stats object to display.
+            fixed_column_width: If set, forces all columns to use this exact width.
+            max_column_width: When dynamic, caps each column width to this length.
+        """
+        if not stats:
+            return
 
-            if not stats_dict:
-                self.gui.stats_text.insert(tk.END, "No statistics available.\n")
-                self.gui.stats_text.configure(state="disabled")
-                return
+        # Enable the Text widget temporarily
+        self.gui.stats_text.configure(state="normal")
+        self.gui.stats_text.delete("1.0", tk.END)
 
-            if fixed_column_width:
-                col_widths = {k: fixed_column_width for k in stats_dict}
+        # Extract non-None values
+        stats_dict = {k: str(v)[0:max_value_length] for k, v in vars(stats).items() if (v is not None) & (k != "frequencies")}
 
-                def fmt_header(k: str) -> str:
-                    s = k[:fixed_column_width]
-                    return f"{s:^{fixed_column_width}}"  # centered
-
-                def fmt_value(v: str) -> str:
-                    s = v[:fixed_column_width]
-                    return f"{s:>{fixed_column_width}}"  # right-aligned
-
-            else:
-                col_widths = {
-                    k: min(max(len(k), len(str(v))), max_column_width)
-                    for k, v in stats_dict.items()
-                }
-
-                def fmt_header(k: str) -> str:
-                    s = k[:col_widths[k]]
-                    return f"{s:^{col_widths[k]}}"  # centered
-
-                def fmt_value(k: str, v: str) -> str:
-                    s = v[:col_widths[k]]
-                    return f"{s:>{col_widths[k]}}"  # right-aligned
-
-            # Header row
-            header = " " + " │ ".join(fmt_header(k) for k in stats_dict.keys()) + " │ "
-            self.gui.stats_text.insert(tk.END, header + "\n")
-
-            # Values row
-            if fixed_column_width:
-                values = " " + " │ ".join(fmt_value(v) for v in stats_dict.values()) + " │ "
-            else:
-                values = " " + " │ ".join(fmt_value(k, v) for k, v in stats_dict.items()) + " │ "
-            self.gui.stats_text.insert(tk.END, values + "\n")
-
-            # Disable again
+        if not stats_dict:
+            self.gui.stats_text.insert(tk.END, "No statistics available.\n")
             self.gui.stats_text.configure(state="disabled")
-        display_stats_table(plot_data.stats)
+            return
+
+        if fixed_column_width:
+            col_widths = {k: fixed_column_width for k in stats_dict}
+
+            def fmt_header(k: str) -> str:
+                s = k[:fixed_column_width]
+                return f"{s:^{fixed_column_width}}"  # centered
+
+            def fmt_value(v: str) -> str:
+                s = v[:fixed_column_width]
+                return f"{s:>{fixed_column_width}}"  # right-aligned
+
+        else:
+            col_widths = {
+                k: min(max(len(k), len(str(v))), max_column_width)
+                for k, v in stats_dict.items()
+            }
+
+            def fmt_header(k: str) -> str:
+                s = k[:col_widths[k]]
+                return f"{s:^{col_widths[k]}}"  # centered
+
+            def fmt_value(k: str, v: str) -> str:
+                s = v[:col_widths[k]]
+                return f"{s:>{col_widths[k]}}"  # right-aligned
+
+        # Header row
+        header = " " + " │ ".join(fmt_header(k) for k in stats_dict.keys()) + " │ "
+        self.gui.stats_text.insert(tk.END, header + "\n")
+
+        # Values row
+        if fixed_column_width:
+            values = " " + " │ ".join(fmt_value(v) for v in stats_dict.values()) + " │ "
+        else:
+            values = " " + " │ ".join(fmt_value(k, v) for k, v in stats_dict.items()) + " │ "
+        self.gui.stats_text.insert(tk.END, values + "\n")
+
+        # Disable again
+        self.gui.stats_text.configure(state="disabled")
+
 
     def set_logo_image(self, frame, icon_path):
         try:
@@ -840,5 +987,5 @@ class GUIRenderer:
         self.gui.app.new_event()
         self.gui.app.update_repository(JsonRepository())
         self.refresh_objects()
-        self.plot_selected_data()
+        self.plot_data()
 

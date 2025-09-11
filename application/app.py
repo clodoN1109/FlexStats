@@ -1,6 +1,8 @@
+import math
 import os
-from datetime import datetime, timezone
-from typing import List
+from typing import List, Dict
+import datetime
+import numpy as np
 from application.ports.i_repository import IRepository
 from domain import (
     RangeDomain, EnumerationDomain,
@@ -9,6 +11,7 @@ from domain import (
     Stats, StatsAnalyzer,
     Variable, VariableData,
 )
+from domain.domain import ValueType
 from domain.script import Script
 from infrastructure.environment.environment import Env
 
@@ -33,7 +36,7 @@ class App:
         self.repository.save_observables(self.observables)
 
     def new_event(self):
-        time = datetime.now(timezone.utc)
+        time = datetime.datetime.now(datetime.timezone.utc)
         records: List[Record] = []
         for observable in self.observables:
             state: List[Property] = observable.fetch_state()
@@ -60,7 +63,6 @@ class App:
     @staticmethod
     def list_scripts() -> List[Script]:
         scripts_path = Env.get_scripts_dir()
-        print(scripts_path)
 
         allowed_exts = {".py", ".ps1", ".sh", ".bat", ".rb"}
         scripts: List[Script] = []
@@ -95,17 +97,99 @@ class App:
         stats = StatsAnalyzer.compute(variable, domain)
         return stats
 
+    def compute_extrapolation(
+            self,
+            object_name: str,
+            variable_name: str,
+            x_min=None,
+            x_max=None,
+            precision: int = 86400,  # in seconds
+            method: str = "linear"
+    ):
+
+        obj = next(item for item in self.model.objects if item.name == object_name)
+        variable = obj.variables[variable_name]
+        x = list(variable.data.keys())
+        y = list(variable.data.values())
+
+        if not x or not y:
+            return {}
+
+        # --- Normalize x_min and x_max ---
+        # They may already be datetime objects (from DateEntry) or None
+        if isinstance(x_min, str) and x_min.strip():
+            x_min_dt = datetime.datetime.strptime(x_min, "%m-%d-%Y")
+        elif isinstance(x_min, datetime.datetime):
+            x_min_dt = x_min
+        else:
+            x_min_dt = min(x)
+
+        if isinstance(x_max, str) and x_max.strip():
+            x_max_dt = datetime.datetime.strptime(x_max, "%m-%d-%Y")
+        elif isinstance(x_max, datetime.datetime):
+            x_max_dt = x_max
+        else:
+            x_max_dt = max(x)
+
+        # Align with tzinfo if needed
+        if x and x[0].tzinfo is not None:
+            if x_min_dt.tzinfo is None:
+                x_min_dt = x_min_dt.replace(tzinfo=x[0].tzinfo)
+            if x_max_dt.tzinfo is None:
+                x_max_dt = x_max_dt.replace(tzinfo=x[0].tzinfo)
+
+        # Ensure x_max_dt > x_min_dt
+        if x_max_dt <= x_min_dt:
+            x_max_dt = x_min_dt + datetime.timedelta(seconds=precision)
+
+        # Build new_x using precision directly
+        new_x = []
+        current = x_min_dt
+        while current <= x_max_dt:
+            new_x.append(current)
+            current += datetime.timedelta(seconds=precision)
+
+        # Ensure last point is exactly x_max_dt
+        if new_x[-1] != x_max_dt:
+            new_x.append(x_max_dt)
+
+        # Fit & extrapolate
+        x_num = np.array([dt.timestamp() for dt in x])
+        y_num = np.array(y)
+        new_x_num = np.array([dt.timestamp() for dt in new_x])
+
+        if method == "linear":
+            coeffs = np.polyfit(x_num, y_num, 1)
+        elif method == "quadratic":
+            coeffs = np.polyfit(x_num, y_num, 2)
+        else:
+            raise ValueError(f"Unknown extrapolation method: {method}")
+
+        poly = np.poly1d(coeffs)
+        new_y = poly(new_x_num)
+
+        return {dt: float(val) for dt, val in zip(new_x, new_y)}
+
+    def get_extrapolation_plot_data(self,
+                                    object_name: str,
+                                    variable_name: str,
+                                    method: str,
+                                    x_min,
+                                    x_max,
+                                    precision: int = 86400):
+
+        extrapolation_data = self.compute_extrapolation(
+            object_name, variable_name, x_min, x_max, precision, method
+        )
+        return extrapolation_data
+
     def get_variable_data(self, object_name: str, variable_name: str) -> VariableData:
         obj = next(item for item in self.model.objects if item.name == object_name)
         variable = obj.variables[variable_name]
         data = variable.data
         return data
 
-    def get_plot_data(self, object_name: str, variable_name: str, plot_type: str) -> PlotData:
-        obj = next(item for item in self.model.objects if item.name == object_name)
-        variable = obj.variables[variable_name]
-        variable_data = variable.data
-
+    def get_plot_data(self, object_name: str, variable_name: str, plot_type: str, variable_data: VariableData, y_resolution = 2) -> PlotData:
         # Extract values from the data
         values = list(variable_data.values())
 
@@ -128,23 +212,29 @@ class App:
             # X is timestamps, Y is values
             x = list(variable_data.keys())
             y = list(variable_data.values())
+
             title = f"Time Series for {variable_name}"
             subtitle = f"{object_name}"
             x_label = "Time"
-            y_label = variable.name
+            y_label = variable_name
 
         elif plot_type == "distribution":
-            freq = getattr(stats, "frequencies", None) or {}
 
-            if not freq:
-                # Build frequencies safely (handle unhashable items by stringifying)
-                freq = {}
-                for v in values:
-                    try:
-                        freq[v] = freq.get(v, 0) + 1
-                    except TypeError:
-                        key = str(v)
-                        freq[key] = freq.get(key, 0) + 1
+            freq: Dict[ValueType, int] = {}
+
+            def apply_precision(v):
+                if isinstance(v, (int, float)) and y_resolution is not None:
+                    factor = 10 ** y_resolution
+                    return math.floor(v * factor) / factor
+                return v
+
+            for v in values:
+                try:
+                    v_precise = apply_precision(v)
+                    freq[v_precise] = freq.get(v_precise, 0) + 1
+                except TypeError:
+                    key = str(v)
+                    freq[key] = freq.get(key, 0) + 1
 
             # Build axes from the frequencies
             # Prefer a stable, readable order: try by key; if mixed types, fall back to frequency desc
@@ -158,7 +248,7 @@ class App:
 
             title = f"Distribution of {variable_name}"
             subtitle = f"{object_name}"
-            x_label = variable.name
+            x_label = variable_name
             y_label = "Frequency"
 
         else:
