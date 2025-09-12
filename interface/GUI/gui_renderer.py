@@ -8,21 +8,22 @@ import tkinter.font as tkFont
 from typing import List, Optional
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from pymsgbox import buttonsFrame
+from pygments.styles.dracula import background
 
-from domain import Object, Variable
+from domain import Object, Variable, Observable
 from domain.plot import PlotData
 import matplotlib.dates as mdates
-from tkcalendar import DateEntry
 from domain.script import Script
 from infrastructure.environment.environment import Env
 from infrastructure.persistence.json_repository import JsonRepository
+from infrastructure.processing.string_handler import StringHandler
 from interface.GUI.assets.components import SimpleDateEntry
 from interface.GUI.gui_styles import GUIStyle
 
 class GUIRenderer:
 
     def __init__(self, gui):
+        self.observables = None
         self.resolution_var = None
         self.plots_dropdown_cb = None
         self.plots_dropdown_var = None
@@ -345,12 +346,12 @@ class GUIRenderer:
                 ("➕ event", self.new_event),
             ],
         )
-        (self.gui.script_cb, self.gui.script_var) = self._add_dropdown(
+        (self.gui.observable_cb, self.gui.observable_var) = self._add_dropdown(
             self.gui.left_frame,
-            "scripts",
-            var_name="script_var",
+            "observables",
+            var_name="observable_var",
             values=[],
-            button=("🞂", self.run_selected_script, 5),
+            button=("  🖋️", self.edit_selected_observable, 5),
         )
         self.section_item_separator(5)
         # --- MODEL Section ---
@@ -454,50 +455,6 @@ class GUIRenderer:
 
         self.section_item_separator(5)
 
-    def run_selected_script(self):
-        script_name_ext = self.gui.script_var.get()
-        selected_script = next(
-            (s for s in self.scripts if (s.name + s.extension) == script_name_ext),
-            None
-        )
-
-        if selected_script is None:
-            print(f"No script found for: {script_name_ext}")
-            return
-
-        ext = selected_script.extension.lower()
-        path = selected_script.path
-
-        # Map extension -> interpreter command
-        interpreters = {
-            ".py": [sys.executable],
-            ".ps1": ["powershell", "-ExecutionPolicy", "Bypass", "-File"],
-            ".sh": ["bash"],
-            ".bat": None,
-            ".rb": ["ruby"],
-        }
-
-        if ext not in interpreters:
-            print(f"Unsupported script type: {ext}")
-            return
-
-        cmd = interpreters[ext]
-
-        # For batch files, run directly
-        if cmd is None:
-            cmdline = [path]
-        else:
-            if shutil.which(cmd[0]) is None:
-                print(f"Interpreter not found: {cmd[0]}")
-                return
-            cmdline = cmd + [path]
-
-        try:
-            print(f"Running: {' '.join(cmdline)}")
-            subprocess.run(cmdline, check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Script failed with exit code {e.returncode}")
-
     # --- Helper Methods ---
     def _add_button(self, frame, text, cmd, width):
         ttk.Button(
@@ -523,7 +480,9 @@ class GUIRenderer:
     def _add_dropdown(self, parent, label, var_name, values, button=None):
         """Add a labeled dropdown, with optional small square button on the right."""
         ttk.Label(parent, text=label, style=f"{self.style.prefix}.TLabel").pack(
-            anchor="w", padx=self.section_items_padding_x * 2, pady=self.section_items_padding_y
+            anchor="w",
+            padx=self.section_items_padding_x * 2,
+            pady=self.section_items_padding_y
         )
 
         frame = ttk.Frame(parent, style=f"{self.style.prefix}.TFrame")
@@ -539,11 +498,19 @@ class GUIRenderer:
             style=f"{self.style.prefix}.TCombobox",
             values=values,
         )
-        cb.pack(side="left", fill="x", expand=False, padx=(self.section_items_padding_x, self.section_items_padding_x/2))
+        # let the combobox expand to fill available space
+        cb.pack(
+            side="left",
+            fill="x",  # <-- expand horizontally
+            expand=True,  # <-- take extra space in frame
+            padx=(self.section_items_padding_x, self.section_items_padding_x / 2)
+        )
 
         if button:
-            text, cmd, width= button
+            text, cmd, width = button
+            # put the button on the right, it will keep its fixed width
             self._add_button(frame, text, cmd, width)
+
         return cb, var
 
     def right_pane(self, container):
@@ -598,18 +565,20 @@ class GUIRenderer:
         self.left_pane(self.gui.container)
         self.right_pane(self.gui.container)
 
-    def refresh_scripts(self):
-        current_script = self.gui.script_var.get()
+    def refresh_observables(self):
+        current_observable: Observable = self.gui.observable_var.get()
 
-        self.scripts: List[Script] = self.gui.app.list_scripts()
-        script_names = [script.name + script.extension for script in self.scripts]
-        self.gui.script_cb["values"] = script_names
+        self.observables: List[Observable] = self.gui.app.list_observables()
+        self.gui.observable_cb["values"] = [
+            observable.name
+            for observable in self.observables
+        ]
 
         # Restore selection if still valid, otherwise pick first
-        if current_script in script_names:
-            self.gui.script_var.set(current_script)
-        elif script_names:
-            self.gui.script_var.set(script_names[0])
+        if current_observable in self.observables:
+            self.gui.observable_var.set(current_observable)
+        elif self.observables:
+            self.gui.observable_var.set(self.observables[0].name)
 
     def refresh_objects(self):
         # Remember current selection before refresh
@@ -675,7 +644,6 @@ class GUIRenderer:
 
     def render_plot(self, plot_data: PlotData, x_min=None, x_max=None):
         """Handles the actual matplotlib drawing."""
-        import datetime
 
         # Clear previous plot
         self.gui.ax.clear()
@@ -945,6 +913,17 @@ class GUIRenderer:
         popup.title("New Observable")
         popup.transient(self.gui)  # keep above main window
         popup.grab_set()  # make it modal
+        popup.iconphoto(False, tk.PhotoImage(file=f"{self.gui.gui_path}/assets/icons/icon.png"))
+
+        width = 410
+        height = 130
+        screen_w = popup.winfo_screenwidth()
+        screen_h = popup.winfo_screenheight()
+
+        x = (screen_w // 2) - (width // 2)
+        y = (screen_h // 2) - (height // 2)
+
+        popup.geometry(f"{width}x{height}+{x}+{y}")
 
         # Labels + fields
         ttk.Label(popup, text="Name:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
@@ -973,6 +952,7 @@ class GUIRenderer:
             if name and location:
                 self.gui.app.new_observable(name, location)
                 popup.destroy()  # close the popup
+                self.refresh_observables()
             else:
                 tk.messagebox.showerror("Error", "Both fields are required!")
 
@@ -983,9 +963,85 @@ class GUIRenderer:
         # Focus on the name field
         name_entry.focus()
 
+    def edit_selected_observable(self):
+        """
+        Opens a modal popup to edit an existing observable.
+        Includes Name, Path, OK, Cancel, and Remove buttons.
+        """
+        observable_name = self.gui.observable_var.get()
+        observable: Observable = [o for o in self.observables if o.name == observable_name][0]
+
+        popup = tk.Toplevel(self.gui)
+        popup.title(f"Edit Observable: {observable.name}")
+        popup.transient(self.gui)  # keep above main window
+        popup.grab_set()  # make it modal
+        popup.iconphoto(False, tk.PhotoImage(file=f"{self.gui.gui_path}/assets/icons/icon.png"))
+
+        width = 450
+        height = 130
+        screen_w = popup.winfo_screenwidth()
+        screen_h = popup.winfo_screenheight()
+
+        x = (screen_w // 2) - (width // 2)
+        y = (screen_h // 2) - (height // 2)
+
+        popup.geometry(f"{width}x{height}+{x}+{y}")
+
+        # let column 1 expand
+        popup.grid_columnconfigure(1, weight=1)
+
+        # Name field
+        ttk.Label(popup, text="Name:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
+        name_var = tk.StringVar(value=observable.name)
+        name_entry = ttk.Entry(popup, textvariable=name_var)
+        name_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+
+        # Path field
+        ttk.Label(popup, text="Path:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        path_var = tk.StringVar(value=observable.source)
+        path_entry = ttk.Entry(popup, textvariable=path_var)
+        path_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+
+        # Browse button
+        def browse_path():
+            path = filedialog.askopenfilename(title="Select File")
+            if path:
+                path_var.set(path)
+
+        browse_btn = ttk.Button(popup, text="Browse", command=browse_path)
+        browse_btn.grid(row=1, column=2, padx=5, pady=5)
+
+        # Submit (OK) callback
+        def submit():
+            new_name = name_var.get().strip()
+            new_path = path_var.get().strip()
+            if new_name and new_path:
+                self.gui.app.update_observable(observable, new_name, new_path)
+                popup.destroy()
+                self.refresh_observables()
+            else:
+                tk.messagebox.showerror("Error", "Both fields are required!")
+
+        # Remove callback
+        def remove():
+            if tk.messagebox.askyesno("Confirm Remove", f"Remove observable '{observable.name}'?"):
+                self.gui.app.remove_observable(observable)
+                popup.destroy()
+                self.refresh_observables()
+
+        # Buttons in a separate frame
+        button_frame = tk.Frame(popup)
+        button_frame.grid(row=3, column=0, columnspan=3, pady=10, sticky="e")
+
+        ttk.Button(button_frame, text="OK", command=submit).pack(side="right", padx=5)
+        ttk.Button(button_frame, text="Cancel", command=popup.destroy).pack(side="right", padx=5)
+        ttk.Button(button_frame, text="Remove", command=remove).pack(side="right", padx=5)
+
+        # Focus on the name field
+        name_entry.focus()
+
     def new_event(self):
         self.gui.app.new_event()
         self.gui.app.update_repository(JsonRepository())
         self.refresh_objects()
         self.plot_data()
-

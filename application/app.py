@@ -35,6 +35,15 @@ class App:
         self.observables.append(obs)
         self.repository.save_observables(self.observables)
 
+    def update_observable(self, observable: Observable, new_name: str, new_source: str):
+        observable.name = new_name
+        observable.source = new_source
+        self.repository.save_observables(self.observables)
+
+    def remove_observable(self, observable: Observable):
+        self.observables = [o for o in self.observables if o.name != observable.name]
+        self.repository.save_observables(self.observables)
+
     def new_event(self):
         time = datetime.datetime.now(datetime.timezone.utc)
         records: List[Record] = []

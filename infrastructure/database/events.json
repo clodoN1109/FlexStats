@@ -4164,5 +4164,2403 @@
                 ]
             }
         ]
+    },
+    {
+        "timestamp": "2025-09-12T15:40:24.409837+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 24.165036719363563
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 67
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:44:42.202184+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "test-object",
+                "state": []
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 19.559986184134836
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 36
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:16.026432+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 22.214105975361765
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 89
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:22.905621+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 22.42765133071505
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 36
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:26.066377+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 25.55790592991839
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 45
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:27.745924+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 23.711315677700632
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 66
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:29.461471+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 21.940943052583044
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 72
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:30.785633+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 19.40413534964923
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 58
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:31.991062+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 16.150661190501673
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 24
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:54:33.958208+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 22.95976609246286
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 37
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:55:20.797962+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 26.9821029787201
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 88
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:55:22.846519+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 19.686569089433927
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 51
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:55:24.389551+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 22.405339277222147
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 50
+                    },
+                    {
+                        "name": "status",
+                        "value": "critical"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:56:14.886442+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 23.890480183251356
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 87
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:56:17.334882+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 15.287241254780394
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 43
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:56:20.741673+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 18.232661826228316
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 25
+                    },
+                    {
+                        "name": "status",
+                        "value": "ok"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:57:10.590234+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 19.981244587565804
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 64
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "timestamp": "2025-09-12T15:57:13.389361+00:00",
+        "records": [
+            {
+                "observable": "A",
+                "state": [
+                    {
+                        "name": "build number",
+                        "value": 284
+                    },
+                    {
+                        "name": "configuration",
+                        "value": "Release"
+                    },
+                    {
+                        "name": "errors",
+                        "value": 5010
+                    },
+                    {
+                        "name": "warnings",
+                        "value": 290
+                    }
+                ]
+            },
+            {
+                "observable": "B",
+                "state": [
+                    {
+                        "name": "stamina",
+                        "value": 301
+                    },
+                    {
+                        "name": "HP",
+                        "value": 2420
+                    },
+                    {
+                        "name": "Exp",
+                        "value": 9
+                    }
+                ]
+            },
+            {
+                "observable": "ISS",
+                "state": [
+                    {
+                        "name": "OBJECT_NAME",
+                        "value": "ISS (ZARYA)"
+                    },
+                    {
+                        "name": "OBJECT_ID",
+                        "value": "1998-067A"
+                    },
+                    {
+                        "name": "EPOCH",
+                        "value": "2025-09-12T20:06:24.501Z"
+                    },
+                    {
+                        "name": "MEAN_MOTION",
+                        "value": 15.50244386
+                    },
+                    {
+                        "name": "ECCENTRICITY",
+                        "value": 0.0004235
+                    },
+                    {
+                        "name": "INCLINATION",
+                        "value": 51.6331
+                    },
+                    {
+                        "name": "RA_OF_ASC_NODE",
+                        "value": 237.5922
+                    },
+                    {
+                        "name": "ARG_OF_PERICENTER",
+                        "value": 328.5405
+                    },
+                    {
+                        "name": "MEAN_ANOMALY",
+                        "value": 31.533
+                    },
+                    {
+                        "name": "EPHEMERIS_TYPE",
+                        "value": 0
+                    },
+                    {
+                        "name": "CLASSIFICATION_TYPE",
+                        "value": "U"
+                    },
+                    {
+                        "name": "NORAD_CAT_ID",
+                        "value": "25544"
+                    },
+                    {
+                        "name": "ELEMENT_SET_NO",
+                        "value": 999
+                    },
+                    {
+                        "name": "REV_AT_EPOCH",
+                        "value": 52860
+                    },
+                    {
+                        "name": "BSTAR",
+                        "value": 0.00014414
+                    },
+                    {
+                        "name": "MEAN_MOTION_DOT",
+                        "value": 7.85e-05
+                    },
+                    {
+                        "name": "MEAN_MOTION_DDOT",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "observable": "TestScript",
+                "state": [
+                    {
+                        "name": "temperature",
+                        "value": 22.311860332152683
+                    },
+                    {
+                        "name": "humidity",
+                        "value": 20
+                    },
+                    {
+                        "name": "status",
+                        "value": "warning"
+                    }
+                ]
+            }
+        ]
     }
 ]

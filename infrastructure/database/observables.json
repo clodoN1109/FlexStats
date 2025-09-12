@@ -1,18 +1,14 @@
 [
     {
-        "name": "A",
-        "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/infrastructure/database/observable_A.json"
-    },
-    {
         "name": "B",
         "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/infrastructure/database/observable_B.json"
     },
     {
-        "name": "test-object",
-        "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/scripts/test-event.json"
-    },
-    {
         "name": "ISS",
         "source": "https://api.keeptrack.space/v2/sat/25544/omm"
+    },
+    {
+        "name": "TestScript",
+        "source": "C:/Users/clovi/OneDrive/\u00c1rea de Trabalho/Clodo/Work/Projects/Incubator/FlexStats/Dev/src/scripts/test.py"
     }
 ]

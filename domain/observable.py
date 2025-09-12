@@ -6,6 +6,7 @@ import json
 import requests
 
 from domain.property import Property
+from infrastructure.processing.external_script_handler import ExternalScriptHandler
 
 
 class Observable:
@@ -25,28 +26,55 @@ class Observable:
             self.is_local = Path(self.source).exists()
 
     def fetch_state(self) -> List["Property"]:
+        def flatten(data, parent_key=""):
+            items = []
+            if isinstance(data, dict):
+                for k, v in data.items():
+                    new_key = f"{parent_key}/{k}" if parent_key else k
+                    items.extend(flatten(v, new_key))
+            elif isinstance(data, list):
+                for idx, v in enumerate(data):
+                    new_key = f"{parent_key}/{idx}" if parent_key else str(idx)
+                    items.extend(flatten(v, new_key))
+            else:
+                if isinstance(data, (str, int, float)):
+                    items.append((parent_key, data))
+            return items
+
         try:
             if self.is_url:
                 response = requests.get(self.source, timeout=5)
                 response.raise_for_status()
                 raw_data = response.json()
             elif self.is_local:
-                with open(self.source, "r", encoding="utf-8") as f:
-                    raw_data = json.load(f)
+                path = Path(self.source)
+                if path.suffix.lower() == ".json":
+                    with open(path, "r", encoding="utf-8") as f:
+                        raw_data = json.load(f)
+                else:
+                    # Treat as script
+                    class DummyScript:
+                        def __init__(self, path):
+                            self.path = str(path)
+                            self.extension = path.suffix
+                            self.name = path.stem
+
+                    script = DummyScript(path)
+                    output = ExternalScriptHandler.run_script_and_capture(script)
+                    raw_data = json.loads(output)
             else:
                 raise ValueError(f"Invalid source path or URL: {self.source}")
 
-            if isinstance(raw_data, dict):
-                return [Property(name=k, value=v) for k, v in raw_data.items()]
+            props = []
+            if isinstance(raw_data, (dict, list)):
+                for k, v in flatten(raw_data):
+                    props.append(Property(name=k, value=v))
             elif isinstance(raw_data, list):
-                # if it's already list of dicts {name, value}
-                props = []
                 for item in raw_data:
                     if isinstance(item, dict) and "name" in item and "value" in item:
                         props.append(Property(name=item["name"], value=item["value"]))
-                return props
-            else:
-                return []
+
+            return props
 
         except Exception as e:
             print(f"Failed to fetch or parse state for {self.name}: {e}")

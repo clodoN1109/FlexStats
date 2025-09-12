@@ -1,24 +1,23 @@
 import json
 import random
-from pathlib import Path
 
-def main():
-    # Directory of this script
-    script_dir = Path(__file__).resolve().parent
-    file_path = script_dir / "test-event.json"
-
-    # Fixed properties
+def generate_event():
+    """
+    Generates a random event dictionary with temperature, humidity, and status.
+    Returns:
+        dict: The event data.
+    """
     properties = {
         "temperature": random.uniform(15.0, 30.0),  # float
         "humidity": random.randint(20, 90),         # int
         "status": random.choice(["ok", "warning", "critical"]),  # string
     }
+    return properties
 
-    # If file exists, just overwrite with new random values
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(properties, f, indent=4)
-
-    print(f"Updated {file_path} with new random values.")
+def main():
+    event_data = generate_event()
+    print(json.dumps(event_data, indent=4))  # Optional: print as JSON string
+    return event_data
 
 if __name__ == "__main__":
     main()

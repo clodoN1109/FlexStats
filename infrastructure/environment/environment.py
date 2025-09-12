@@ -34,10 +34,14 @@ class Env:
     def get_scripts_dir() -> Path:
         if getattr(sys, "frozen", False):
             # Running in a PyInstaller bundle
-            return Path(sys.executable).parent.resolve().joinpath("scripts").resolve()
+            scripts_path = Path(sys.executable).parent.joinpath("scripts").resolve()
         else:
             # Running in normal Python environment
-            return Path(__file__).parent.parent.parent.joinpath("scripts").resolve()
+            scripts_path = Path(__file__).parent.parent.parent.joinpath("scripts").resolve()
+
+        # Ensure the directory exists
+        scripts_path.mkdir(parents=True, exist_ok=True)
+        return scripts_path
 
     @staticmethod
     def get_window() -> dict:

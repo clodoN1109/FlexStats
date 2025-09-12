@@ -22,7 +22,8 @@ class TkinterGUI(tk.Tk):
         renderer.font("courier", 10)
         renderer.build_title_bar()
         renderer.panes()
+        renderer.refresh_observables()
         renderer.refresh_objects()
-        renderer.refresh_scripts()
         renderer.ensure_overrideredirect()
         renderer.apply_style()
+

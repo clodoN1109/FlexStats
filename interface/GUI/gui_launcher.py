@@ -1,5 +1,5 @@
 from application.app import App
-from interface.GUI.gui_app import TkinterGUI
+from interface.GUI.gui import TkinterGUI
 
 
 from typing import List
